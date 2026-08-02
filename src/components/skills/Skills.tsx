@@ -24,7 +24,12 @@ const SKILL_CARDS = [
   {
     icon: "🛠",
     name: "Tools",
-    skills: ["Git", "Vercel", "Firebase", "Linux", "Unity"],
+    skills: ["Git", "Vercel", "Firebase", "Linux"],
+  },
+  {
+    icon: "🎮",
+    name: "Game Dev / 3D",
+    skills: ["Unity", "Blender"],
   },
 ] as const;
 

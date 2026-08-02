@@ -21,4 +21,6 @@ export const skills: Skill[] = [
   { name: "Vercel", category: "Tools" },
   { name: "Linux", category: "Tools" },
   { name: "VS Code", category: "Tools" },
+  { name: "Unity", category: "Game Dev / 3D" },
+  { name: "Blender", category: "Game Dev / 3D" },
 ];

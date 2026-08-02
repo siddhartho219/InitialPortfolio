@@ -12,41 +12,49 @@ const EDUCATION: TimelineItem[] = [
   {
     period: "2022 → PRESENT",
     role: "B.Sc. Computer Science & Engineering",
-    place: "UNIVERSITY · Dhaka BD",
-    description:
-      "Algorithms, AI, embedded systems. Focus on ML and robotics research.",
+    place: "United International University · Dhaka BD",
+    description: "Algorithms, AI, embedded systems. Focus on ML and robotics research.",
     active: true,
   },
   {
-    period: "2019 → 2021",
+    period: "2018 → 2020",
     role: "Higher Secondary Certificate",
-    place: "COLLEGE · Science Division",
-    description: "Physics, Chemistry, Mathematics.",
+    place: "University Laboratory School & College · Science",
+    description: "GPA 5.00. Physics, Chemistry, Mathematics.",
+  },
+  {
+    period: "2018",
+    role: "Secondary School Certificate",
+    place: "Shamsul Haque Khan School & College · Science",
+    description: "GPA 5.00.",
   },
 ];
 
 const HIGHLIGHTS: TimelineItem[] = [
   {
-    period: "2024",
-    role: "Restaurant Delivery Robot",
-    place: "Independent · Demoed at university",
-    description:
-      "Autonomous robot, sensor fusion, obstacle avoidance, Arduino.",
+    period: "2026",
+    role: "12-Hour Online Hackathon",
+    place: "UIU Developers Hub",
+    description: "Stage-0 intra-university hackathon, 5 PM–7 AM overnight build.",
     active: true,
   },
   {
-    period: "2023",
-    role: "AI Research Reviewer",
-    place: "Personal Project",
-    description:
-      "LLM-powered paper analysis with prompt engineering pipelines.",
+    period: "2025–26",
+    role: "UIU HackDay",
+    place: "UIU Developers Hub × UIU Computer Club",
+    description: "First-ever UIU HackDay, 6-hour on-site build, mystery theme revealed at start.",
   },
   {
-    period: "2023",
-    role: "Full Stack Web Dev",
-    place: "Self-taught",
-    description:
-      "Django+React platforms. REST APIs, auth, Vercel deployment.",
+    period: "Ongoing",
+    role: "Green Computing Research",
+    place: "Course research, ICCIT (in review)",
+    description: "Co-authored paper prepared for short/blind-review submission.",
+  },
+  {
+    period: "2024",
+    role: "Embedded Systems Lab",
+    place: "Microprocessor Lab · Arduino/ESP32",
+    description: "Built a smart-dustbin prototype exploring sensor-triggered automation.",
   },
 ];
 
