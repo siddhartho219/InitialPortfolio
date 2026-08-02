@@ -15,6 +15,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="pc__body">
         <span className="pc__tag">{project.category}</span>
+        {project.status ? <span className="pc__tag">{project.status}</span> : null}
 
         <h3 className="pc__title">
           <Link href={`/projects/${project.slug}`}>{project.title}</Link>
@@ -31,14 +32,26 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <div className="pc__links">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noreferrer"
-            className="pc__link-btn"
-          >
-            GitHub ↗
-          </a>
+          {project.github ? (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="pc__link-btn"
+            >
+              GitHub ↗
+            </a>
+          ) : null}
+          {project.video ? (
+            <a
+              href={project.video}
+              target="_blank"
+              rel="noreferrer"
+              className="pc__link-btn"
+            >
+              Watch Demo ↗
+            </a>
+          ) : null}
           {project.demo ? (
             <a
               href={project.demo}

@@ -6,8 +6,10 @@ export interface Project {
   tech: string[];
   image: string;
   featured: boolean;
-  github: string;
+  github?: string;
   demo?: string;
+  video?: string;
+  status?: string;
   category: string;
 }
 

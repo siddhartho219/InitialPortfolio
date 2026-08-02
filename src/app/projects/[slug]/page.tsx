@@ -4,7 +4,7 @@ import type { Project } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, GitBranch } from "lucide-react";
+import { ExternalLink, GitBranch, Play } from "lucide-react";
 
 import { projects } from "@/data/projects";
 import Container from "@/components/layout/Container";
@@ -109,27 +109,44 @@ export default async function ProjectPage({
               </ul>
 
               <div className="mt-6 flex flex-col gap-3">
-                <GlowButton
-                  variant="primary"
-                  href={project.github}
-                  className="w-full justify-center"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <GitBranch className="h-4 w-4" />
-                    GitHub
-                  </span>
-                </GlowButton>
+                {project.github ? (
+                  <GlowButton
+                    variant="primary"
+                    href={project.github}
+                    className="w-full justify-center"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <GitBranch className="h-4 w-4" />
+                      GitHub
+                    </span>
+                  </GlowButton>
+                ) : null}
 
-                <GlowButton
-                  variant="outline"
-                  href={project.demo}
-                  className="w-full justify-center"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <ExternalLink className="h-4 w-4" />
-                    Live Demo
-                  </span>
-                </GlowButton>
+                {project.video ? (
+                  <GlowButton
+                    variant="primary"
+                    href={project.video}
+                    className="w-full justify-center"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Play className="h-4 w-4" />
+                      Watch Demo
+                    </span>
+                  </GlowButton>
+                ) : null}
+
+                {project.demo ? (
+                  <GlowButton
+                    variant="outline"
+                    href={project.demo}
+                    className="w-full justify-center"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <ExternalLink className="h-4 w-4" />
+                      Live Demo
+                    </span>
+                  </GlowButton>
+                ) : null}
               </div>
             </GlassCard>
           </div>

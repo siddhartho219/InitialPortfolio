@@ -2,62 +2,41 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+import { EMAIL, GITHUB } from '@/data/contact';
+import { skills as SKILLS_DATA } from '@/data/skills';
+import { projects as PROJECTS_DATA } from '@/data/projects';
+
+const skills = SKILLS_DATA.reduce((acc, s) => {
+  acc[s.category] = acc[s.category] || [];
+  acc[s.category].push(s.name);
+  return acc;
+}, {} as Record<string, string[]>);
+
+const projects = PROJECTS_DATA.reduce((acc, p) => {
+  acc[p.slug] = {
+    title: p.title,
+    description: p.description,
+    tech: p.tech,
+    github: p.github,
+    type: `${p.featured ? "★ Featured · " : ""}${p.category}${p.status ? " · " + p.status : ""}`,
+  };
+  return acc;
+}, {} as Record<string, { title: string; description: string; tech: string[]; github?: string; type: string }>);
+
 const PORTFOLIO = {
   name: 'Siddartho Sarker Bipro',
   title: 'Software Engineer & AI Researcher',
   location: 'Dhaka, Bangladesh',
-  email: 'siddharthosarker219@gmail.com',
-  github: 'https://github.com/Siddhatho',
+  email: EMAIL,
+  github: GITHUB,
   linkedin: 'https://linkedin.com/in/siddhartho-sarker-b5452822a',
   twitter: 'https://x.com/siddartho11',
   status: 'open_to_opportunities=true',
   building: 'RAG pipeline + LLM fine-tuning experiments',
   reading: 'RLHF papers · Attention Is All You Need',
   goal: 'Ship 2 open-source AI tools in 2026',
-  skills: {
-    Frontend: ['Next.js', 'React', 'Tailwind', 'TypeScript'],
-    Backend: ['Django', 'Flask', 'MySQL', 'REST APIs'],
-    'AI/Research': ['Python', 'LLM Workflows', 'Prompt Engineering'],
-    Embedded: ['Arduino', 'C++', 'Sensors', 'Robotics'],
-    Tools: ['Git', 'Vercel', 'Firebase', 'Linux', 'Unity'],
-  },
-  projects: {
-    'restaurant-robot': {
-      title: 'Restaurant Delivery Robot',
-      description: 'Autonomous delivery robot with sensor fusion, obstacle avoidance, and path planning.',
-      tech: ['Arduino', 'C++', 'Sensors', 'Path Planning'],
-      github: 'https://github.com/Siddhatho/restaurant-delivery-robot',
-      type: '★ Featured · Robotics',
-    },
-    'ai-research-reviewer': {
-      title: 'AI Research Reviewer',
-      description: 'LLM-powered paper analysis pipeline with structured prompt engineering workflows.',
-      tech: ['Python', 'LLM', 'Prompt Engineering'],
-      github: 'https://github.com/Siddhatho/ai-research-reviewer',
-      type: 'AI/ML',
-    },
-    'unity-football-game': {
-      title: 'Unity Football Game',
-      description: 'Arcade-style football game with physics-based gameplay and polished UX.',
-      tech: ['Unity', 'C#', 'Game Design'],
-      github: 'https://github.com/Siddhatho/unity-football-game',
-      type: 'Game Dev',
-    },
-    'django-blog-platform': {
-      title: 'Django Blog Platform',
-      description: 'Full-stack blog platform with REST APIs, auth, and MySQL persistence.',
-      tech: ['Django', 'Python', 'MySQL', 'REST'],
-      github: 'https://github.com/Siddhatho/django-blog-platform',
-      type: 'Full Stack',
-    },
-    'embedded-sensor-system': {
-      title: 'Embedded Sensor System',
-      description: 'Multi-sensor data acquisition and monitoring firmware on Arduino.',
-      tech: ['Arduino', 'C++', 'Sensors'],
-      github: 'https://github.com/Siddhatho/embedded-sensor-system',
-      type: 'Embedded',
-    },
-  },
+  skills,
+  projects,
 };
 
 type OutputLine = { type: 'input' | 'output'; content: string };
@@ -149,15 +128,16 @@ function processCommand(raw: string): string[] {
     const key = parts[1].replace('projects/', '') as keyof typeof PORTFOLIO.projects;
     const p = PORTFOLIO.projects[key];
     if (!p) return [`cat: projects/${key}: No such file`, `Available: ${Object.keys(PORTFOLIO.projects).join(', ')}`];
-    return [
+    const lines = [
       `━━━ projects/${key} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
       `Title  : ${p.title}`,
       `Type   : ${p.type}`,
       `Desc   : ${p.description}`,
       `Tech   : ${p.tech.join(' · ')}`,
-      `GitHub : ${p.github}`,
-      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     ];
+    if (p.github) lines.push(`GitHub : ${p.github}`);
+    lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    return lines;
   }
 
   if (parts[0] === 'open') {
