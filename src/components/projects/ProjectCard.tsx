@@ -11,7 +11,7 @@ type ProjectCardProps = {
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article className="pc">
-      <ProjectMedia src={project.image} alt={project.title} />
+      <ProjectMedia slug={project.slug} alt={project.title} />
 
       <div className="pc__body">
         <span className="pc__tag">{project.category}</span>

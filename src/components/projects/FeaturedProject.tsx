@@ -12,7 +12,7 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
   return (
     <article className="pc pc--featured">
       <ProjectMedia
-        src={project.image}
+        slug={project.slug}
         alt={project.title}
         featured
         priority

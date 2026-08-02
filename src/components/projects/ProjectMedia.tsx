@@ -1,46 +1,26 @@
 "use client";
 
-import { useState } from "react";
-
-import Image from "next/image";
+import ProjectIllustration from "@/components/projects/ProjectIllustration";
 
 type ProjectMediaProps = {
-  src: string;
+  slug: string;
   alt: string;
   featured?: boolean;
   priority?: boolean;
 };
 
 export default function ProjectMedia({
-  src,
+  slug,
   alt,
   featured = false,
-  priority = false,
 }: ProjectMediaProps) {
-  const [failed, setFailed] = useState(false);
-
   return (
     <div
       className={`pc__media${featured ? " pc__media--featured" : ""}`}
-      aria-hidden={failed}
+      role="img"
+      aria-label={alt}
     >
-      {failed ? (
-        <div className="pc__placeholder" role="img" aria-label={alt} />
-      ) : (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="pc__img"
-          sizes={
-            featured
-              ? "(max-width: 768px) 100vw, 60vw"
-              : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          }
-          priority={priority}
-          onError={() => setFailed(true)}
-        />
-      )}
+      <ProjectIllustration slug={slug} />
     </div>
   );
 }
