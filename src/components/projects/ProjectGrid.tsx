@@ -58,6 +58,14 @@ export default function ProjectGrid() {
           grid-column: 1 / -1;
           display: grid;
           grid-template-columns: 1.1fr 1fr;
+          background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent) 6%, var(--surface)),
+            var(--surface)
+          );
+          border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+          box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
+            0 20px 60px -30px color-mix(in srgb, var(--accent) 35%, transparent);
         }
         @media (max-width: 767px) {
           .pc--featured {
@@ -131,6 +139,9 @@ export default function ProjectGrid() {
           margin: 0;
           line-height: 1.35;
         }
+        .pc__title--featured {
+          font-size: 20px;
+        }
         .pc__title a {
           color: var(--text);
           text-decoration: none;
@@ -146,6 +157,14 @@ export default function ProjectGrid() {
           line-height: 1.55;
           margin: 0;
           flex: 1;
+        }
+        .pc__eyebrow {
+          font-family: var(--fm);
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin: 0;
         }
         .pc__stack {
           display: flex;

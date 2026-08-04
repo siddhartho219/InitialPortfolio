@@ -24,7 +24,9 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
         </span>
         {project.status ? <span className="pc__tag pc__tag--featured">{project.status}</span> : null}
 
-        <h3 className="pc__title">
+        <p className="pc__eyebrow">→ the tool managing this very page</p>
+
+        <h3 className="pc__title pc__title--featured">
           <Link href={`/projects/${project.slug}`}>{project.title}</Link>
         </h3>
 
