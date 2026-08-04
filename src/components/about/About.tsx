@@ -7,9 +7,9 @@ import Link from "next/link";
 
 
 const STATS = [
-  { value: "5+", label: "PROJECTS" },
-  { value: "3+", label: "YRS CODE" },
-  { value: "∞", label: "CURIOSITY" },
+  { value: "6", label: "PROJECTS SHIPPED" },
+  { value: "1", label: "PAPER IN PROGRESS" },
+  { value: "2", label: "HACKATHONS" },
 ] as const;
 
 const NOW_ROWS = [

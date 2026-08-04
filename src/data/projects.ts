@@ -33,14 +33,14 @@ export const projects: Project[] = [
     slug: "green-computing-research",
     title: "Green Computing Research",
     description:
-      "Green computing coursework usually stops at a literature review. Co-authored an applied research paper instead, now being prepared as a short, blind-review submission to ICCIT.",
+      "A research paper on reducing the environmental cost of running large language models — submitted for conference review, now being extended into a full paper for journal submission.",
     impact: "→ 1 paper, submission-ready for ICCIT",
     longDescription:
-      "Working with my course team on a research paper produced during our Green Computing course. Currently preparing it as a short, blind-review submission to ICCIT — not yet published, actively in progress.",
+      "Co-authored a research paper on green computing, focused on reducing the energy and compute footprint of running large language models. Submitted a short version for blind-review to ICCIT, and currently extending the work into a full paper targeting journal publication.",
     tech: ["Research", "Academic Writing", "Green Computing"],
     image: "/images/projects/green-computing-research.svg",
     featured: false,
-    status: "In Review · ICCIT",
+    status: "Conference Review → Journal (In Progress)",
     category: "Research",
   },
   {

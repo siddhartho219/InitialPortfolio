@@ -76,8 +76,8 @@ const config: Config = {
       },
       fontFamily: {
         heading: ["var(--font-heading)"],
-        body: ["var(--font-body)"],
-        sans: ["var(--font-body)"],
+        body: ["var(--font-sans)"],
+        sans: ["var(--font-sans)"],
       },
     },
   },
