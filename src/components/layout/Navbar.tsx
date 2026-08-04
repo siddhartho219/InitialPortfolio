@@ -15,6 +15,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [activeHref, setActiveHref] = useState<string>("#home");
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navItems = useMemo(() => NAV_LINKS, []);
 
   useEffect(() => {
@@ -90,6 +91,62 @@ export default function Navbar() {
             display: flex;
           }
         }
+        .navbar__links--mobile-open {
+          display: flex;
+          position: fixed;
+          top: 60px;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+          padding: 0.5rem 0;
+          background: var(--bg);
+          border-bottom: 1px solid var(--border);
+        }
+        .navbar__links--mobile-open .navbar__link {
+          width: 100%;
+          padding: 0.9rem 1.5rem;
+        }
+        .navbar__toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          background: transparent;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          color: var(--text);
+          flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+          .navbar__toggle {
+            display: none;
+          }
+        }
+        .navbar__toggle-bar {
+          display: block;
+          width: 16px;
+          height: 1.5px;
+          background: var(--text);
+          position: relative;
+        }
+        .navbar__toggle-bar::before,
+        .navbar__toggle-bar::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          width: 16px;
+          height: 1.5px;
+          background: var(--text);
+        }
+        .navbar__toggle-bar::before {
+          top: -5px;
+        }
+        .navbar__toggle-bar::after {
+          top: 5px;
+        }
         .navbar__link {
           font-family: var(--fm);
           font-size: 11px;
@@ -135,13 +192,17 @@ export default function Navbar() {
           Siddartho<span className="navbar__logo-dot">.</span>
         </Link>
 
-        <nav className="navbar__links" aria-label="Main navigation">
+        <nav
+          className={`navbar__links${mobileOpen ? " navbar__links--mobile-open" : ""}`}
+          aria-label="Main navigation"
+        >
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className="navbar__link"
               data-active={activeHref === item.href ? "true" : "false"}
+              onClick={() => setMobileOpen(false)}
             >
               {item.label}
             </Link>
@@ -152,6 +213,16 @@ export default function Navbar() {
           <span className="navbar__badge-dot" aria-hidden="true" />
           <span>Available for work</span>
         </div>
+
+        <button
+          type="button"
+          className="navbar__toggle"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((prev) => !prev)}
+        >
+          <span className="navbar__toggle-bar" />
+        </button>
       </header>
     </>
   );

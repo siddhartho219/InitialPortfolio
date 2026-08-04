@@ -96,7 +96,7 @@ export default function LoginForm() {
             <Mail className="h-4 w-4 text-muted-foreground" />
             <input
               autoComplete="email"
-              className="w-full bg-transparent outline-none"
+              className="w-full bg-transparent outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               onChange={(event) => setEmail(event.target.value)}
               required
               type="email"
@@ -111,7 +111,7 @@ export default function LoginForm() {
             <LockKeyhole className="h-4 w-4 text-muted-foreground" />
             <input
               autoComplete="current-password"
-              className="w-full bg-transparent outline-none"
+              className="w-full bg-transparent outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               onChange={(event) => setPassword(event.target.value)}
               required
               type="password"

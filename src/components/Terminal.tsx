@@ -445,7 +445,6 @@ export default function Terminal() {
         <div className={`term-panel${closing ? ' term-panel--closing' : ''}`}>
           <div className="term-bar">
             <div className="term-dots">
-              <span onClick={handleClose} title="Close" />
               <span title="Minimize" />
               <span title="Maximize" />
             </div>
