@@ -33,7 +33,8 @@ export const projects: Project[] = [
     slug: "green-computing-research",
     title: "Green Computing Research",
     description:
-      "Co-authored research paper from a Green Computing course, in preparation for short/blind-review submission to ICCIT.",
+      "Green computing coursework usually stops at a literature review. Co-authored an applied research paper instead, now being prepared as a short, blind-review submission to ICCIT.",
+    impact: "→ 1 paper, submission-ready for ICCIT",
     longDescription:
       "Working with my course team on a research paper produced during our Green Computing course. Currently preparing it as a short, blind-review submission to ICCIT — not yet published, actively in progress.",
     tech: ["Research", "Academic Writing", "Green Computing"],
@@ -46,7 +47,8 @@ export const projects: Project[] = [
     slug: "ieee-template-crawler",
     title: "IEEE Template Crawler",
     description:
-      "Automates fetching IEEE's official LaTeX/Word templates in bulk, with retry logic and structured metadata output.",
+      "Manually hunting down the right IEEE template for each publication wastes real time. Built a Python + Selenium crawler that drives IEEE's official template selector across 200+ publications, with retry logic for flaky loads and structured JSON output per template.",
+    impact: "→ 200+ publications, structured JSON output",
     longDescription:
       "A Python + Selenium tool that drives IEEE's template selector across roughly 200 publications, handling flaky page loads with retry logic, de-duplicating repeated templates, and exporting structured JSON metadata for each one. Built to save manual lookup time when preparing conference or journal submissions.",
     tech: ["Python", "Selenium", "Automation"],
@@ -59,7 +61,8 @@ export const projects: Project[] = [
     slug: "openshare",
     title: "OpenShare",
     description:
-      "Local Wi-Fi file transfer app for Android/iOS — no internet, no cloud, direct device-to-device transfer.",
+      "Sharing files between nearby devices usually means routing through the cloud. Built a Flutter app using mDNS for automatic peer discovery (QR fallback), HTTP range requests so interrupted transfers resume instead of restarting, and SHA-256 verification with automatic retry on corrupted chunks.",
+    impact: "→ direct device-to-device, resumable transfers",
     longDescription:
       "A Flutter app for transferring files between nearby devices over local Wi-Fi. Uses mDNS for automatic peer discovery with a QR-code fallback, HTTP range requests so interrupted transfers resume instead of restarting, and SHA-256 verification with automatic retry on corrupted chunks.",
     tech: ["Flutter", "Dart", "Networking"],
@@ -73,7 +76,8 @@ export const projects: Project[] = [
     slug: "assistive-touch",
     title: "Assistive Touch",
     description:
-      "A personal Android utility built to replace a broken volume button — ad-free and permission-stable.",
+      "My phone's physical volume button stopped working, and the existing AssistiveTouch apps I tried showed ads and lost their permissions after a few hours. Built a scoped-down replacement: a floating on-screen control, no ads, stable permission handling.",
+    impact: "→ daily-use replacement, zero ads",
     longDescription:
       "After my phone's physical volume button stopped working, I tried an existing AssistiveTouch app from the Play Store, but it showed ads while online and had permission issues that made it stop working after a few hours. I built my own version scoped to exactly what I needed: a floating on-screen control, no ads, and stable permission handling.",
     tech: ["Flutter", "Dart", "Android"],
@@ -87,7 +91,8 @@ export const projects: Project[] = [
     slug: "bdletter",
     title: "BDletter",
     description:
-      "A LaTeX document class for authentic Bangladeshi official letters — school, bank, and government formats.",
+      "Producing a properly formatted official Bangladeshi letter usually means re-fighting layout in Word every time. Built a LaTeX document class that handles mixed Bangla/English text, bundled fonts, and ready-made templates for school, bank, and government letter formats.",
+    impact: "→ 3 official letter formats, reusable class",
     longDescription:
       "A custom LaTeX class that reproduces the specific formatting conventions of official Bangladeshi letters — mixed Bangla/English text, bundled fonts, and layout templates for school, bank, and government correspondence — so producing a properly formatted official letter doesn't mean manually fighting with layout in Word every time.",
     tech: ["LaTeX", "Typography"],

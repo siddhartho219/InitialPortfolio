@@ -17,6 +17,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <span className="pc__tag">{project.category}</span>
         {project.status ? <span className="pc__tag">{project.status}</span> : null}
 
+        {project.impact ? <p className="pc__eyebrow">{project.impact}</p> : null}
+
         <h3 className="pc__title">
           <Link href={`/projects/${project.slug}`}>{project.title}</Link>
         </h3>
