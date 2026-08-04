@@ -103,13 +103,16 @@ export default function Hero() {
           display: flex;
           flex-direction: column;
           justify-content: center;
+          align-items: center;
           padding: 9rem 3rem 4rem;
           overflow: hidden;
+          text-align: center;
         }
         .hero__inner {
           max-width: 720px;
           display: flex;
           flex-direction: column;
+          align-items: center;
           gap: 1.25rem;
         }
         .hero-fade {

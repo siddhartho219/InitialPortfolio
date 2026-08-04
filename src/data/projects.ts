@@ -2,6 +2,20 @@ import type { Project } from "@/types";
 
 export const projects: Project[] = [
   {
+    slug: "portfolio-cms",
+    title: "Portfolio CMS",
+    description:
+      "An auth-gated admin panel with a schema-driven CRUD engine (Firebase Auth + Firestore) that manages this site's own content — Skills, Projects, and Experience all run through one reusable component, plus a live analytics view and a contact-message inbox. No redeploy needed to edit a word.",
+    longDescription:
+      "Editing portfolio content used to mean redeploying code for every text change. Built an auth-gated /dashboard with a single, reusable CollectionManager component driven by a field-schema config — the same component powers CRUD for Skills, Projects, and Experience by just changing which fields it's given, rather than writing three separate forms. Firestore handles storage, so content updates ship instantly without touching the codebase. Also includes a lightweight analytics view and an inbox for messages submitted through the site's contact form.",
+    tech: ["Next.js", "Firebase Auth", "Firestore", "TypeScript"],
+    image: "/images/projects/portfolio-cms.svg",
+    featured: true,
+    github: "https://github.com/siddhartho219/InitialPortfolio/tree/main/src/app/dashboard",
+    status: "Live · Private",
+    category: "Full-Stack",
+  },
+  {
     slug: "restaurant-robot",
     title: "Restaurant Delivery Robot",
     description:
@@ -10,7 +24,7 @@ export const projects: Project[] = [
       "Built as a course project for Electronics Lab: an Arduino-based robot using ultrasonic and IR sensors for obstacle avoidance and basic path-following logic. The linked video demo shows the full system working end-to-end, both the hardware (sensors, motors, chassis) and the software (control logic) running together live.",
     tech: ["Arduino", "C++", "Sensors"],
     image: "/images/projects/restaurant-robot.svg",
-    featured: true,
+    featured: false,
     video: "https://youtu.be/f3kyGRTmpDU?si=2mJFxcEOoo4LgCRj",
     status: "Course Project",
     category: "Robotics",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Leaf, FileText, Globe, RefreshCw, Smartphone, Wifi, Laptop, BadgeCheck, Mail } from "lucide-react";
+import { Bot, Leaf, FileText, Globe, RefreshCw, Smartphone, Wifi, Laptop, BadgeCheck, Mail, LayoutDashboard, Lock, Database } from "lucide-react";
 
 const ACCENT = "#00e5ff";
 const MUTED = "#5a6b7a";
@@ -86,6 +86,17 @@ export default function ProjectIllustration({ slug }: { slug: string }) {
           <div style={iconWrap("26%", "48%")}><Mail size={32} color={MUTED} strokeWidth={1.5} /></div>
           <div style={iconWrap("52%", "48%")}><FileText size={32} color={ACCENT} strokeWidth={1.5} /></div>
           <div style={iconWrap("78%", "34%")}><BadgeCheck size={18} color={ACCENT} strokeWidth={1.5} /></div>
+        </div>
+      );
+    case "portfolio-cms":
+      return (
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <svg viewBox="0 0 100 100" style={lineStyle} preserveAspectRatio="none">
+            <path d="M 38 50 L 62 50" stroke={ACCENT} strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+          </svg>
+          <div style={iconWrap("30%", "48%")}><LayoutDashboard size={34} color={ACCENT} strokeWidth={1.5} /></div>
+          <div style={iconWrap("70%", "48%")}><Database size={30} color={MUTED} strokeWidth={1.5} /></div>
+          <div style={iconWrap("50%", "24%")}><Lock size={16} color={ACCENT} strokeWidth={1.5} /></div>
         </div>
       );
     default:
