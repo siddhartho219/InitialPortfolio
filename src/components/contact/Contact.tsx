@@ -1,4 +1,5 @@
 import ContactForm from "@/components/contact/ContactForm";
+import AnimateSection from "@/components/ui/AnimateSection";
 import {
   EMAIL,
   GITHUB,
@@ -193,7 +194,7 @@ export default function Contact() {
       `}</style>
 
       <section id="contact" className="contact">
-        <div className="contact__grid">
+        <AnimateSection className="contact__grid" variant="settle">
           <div className="contact__left">
             <h3 className="contact__heading">
               {`Open to opportunities,\ncollaborations & interesting problems.`}
@@ -220,7 +221,7 @@ export default function Contact() {
           <div className="contact__right">
             <ContactForm />
           </div>
-        </div>
+        </AnimateSection>
       </section>
     </>
   );
