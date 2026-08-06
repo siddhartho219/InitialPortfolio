@@ -117,10 +117,10 @@ html {
   --fm: "JetBrains Mono", monospace;
   --fb: "Inter", sans-serif;
   --bg: #060610;
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-h: rgba(255, 255, 255, 0.055);
-  --border: rgba(255, 255, 255, 0.07);
-  --border-h: rgba(255, 255, 255, 0.13);
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-h: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-h: rgba(255, 255, 255, 0.18);
   --text: #f1f5f9;
   --text-s: #94a3b8;
   --text-m: #7f8ea3;

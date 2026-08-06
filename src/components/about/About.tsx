@@ -2,8 +2,12 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+
+import AnimateSection from "@/components/ui/AnimateSection";
+import { fadeUp } from "@/lib/motion";
 
 
 const STATS = [
@@ -326,8 +330,8 @@ export default function About() {
       `}</style>
 
       <section id="about" className="about">
-        <div className="about__grid">
-          <div className="about__left">
+        <AnimateSection className="about__grid" variant="fade">
+          <motion.div className="about__left" variants={fadeUp}>
             <ProfilePhoto />
             <div className="about__stats">
               {STATS.map((stat) => (
@@ -337,9 +341,9 @@ export default function About() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="about__right">
+          <motion.div className="about__right" variants={fadeUp}>
             <h3 className="about__heading">
               Software Engineer &amp; AI Researcher from Bangladesh 🇧🇩
             </h3>
@@ -385,8 +389,8 @@ export default function About() {
                 Contact Me
               </AboutButton>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </AnimateSection>
       </section>
     </>
   );

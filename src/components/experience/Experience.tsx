@@ -1,3 +1,9 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+import AnimateSection from "@/components/ui/AnimateSection";
+import { fadeUp } from "@/lib/motion";
 import { GH_USER } from "@/data/contact";
 
 type TimelineItem = {
@@ -68,7 +74,7 @@ function TimelineColumn({
   showGithub?: boolean;
 }) {
   return (
-    <div className="experience__column">
+    <motion.div className="experience__column" variants={fadeUp}>
       <h3 className="experience__column-title">{title}</h3>
       <ul className="experience__timeline">
         {items.map((item) => (
@@ -97,7 +103,7 @@ function TimelineColumn({
           />
         </div>
       ) : null}
-    </div>
+    </motion.div>
   );
 }
 
@@ -218,10 +224,10 @@ export default function Experience() {
       `}</style>
 
       <section id="experience" className="experience">
-        <div className="experience__grid">
+        <AnimateSection className="experience__grid" variant="fade">
           <TimelineColumn title="EDUCATION" items={EDUCATION} />
           <TimelineColumn title="HIGHLIGHTS" items={HIGHLIGHTS} showGithub />
-        </div>
+        </AnimateSection>
       </section>
     </>
   );

@@ -2,6 +2,7 @@
 
 import SkillCapsule from "@/components/skills/SkillCapsule";
 import AnimateSection from "@/components/ui/AnimateSection";
+import Reveal from "@/components/ui/Reveal";
 import { pop } from "@/lib/motion";
 import { motion } from "framer-motion";
 
@@ -123,9 +124,9 @@ export default function Skills() {
       `}</style>
 
       <section id="skills" className="skills">
-        <div className="skills__header">
+        <Reveal className="skills__header">
           <h2 className="skills__title">Skills</h2>
-        </div>
+        </Reveal>
 
         <AnimateSection className="skills__grid" variant="pop">
           {SKILL_CARDS.map((card) => (

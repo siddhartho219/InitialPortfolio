@@ -6,6 +6,7 @@ import { projects } from "@/data/projects";
 import FeaturedProject from "@/components/projects/FeaturedProject";
 import ProjectCard from "@/components/projects/ProjectCard";
 import AnimateSection from "@/components/ui/AnimateSection";
+import Reveal from "@/components/ui/Reveal";
 import { drop } from "@/lib/motion";
 
 export default function ProjectGrid() {
@@ -211,10 +212,10 @@ export default function ProjectGrid() {
       `}</style>
 
       <section id="projects" className="projects">
-        <header className="projects__header">
+        <Reveal className="projects__header">
           <h2 className="projects__title">Projects</h2>
           <p className="projects__subtitle">Things I&apos;ve built</p>
-        </header>
+        </Reveal>
 
         <AnimateSection className="projects__grid" variant="drop">
           <motion.div variants={drop} style={{ gridColumn: "1 / -1" }}>
