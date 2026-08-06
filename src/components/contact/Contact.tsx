@@ -32,12 +32,12 @@ export default function Contact() {
     <>
       <style>{`
         .contact {
-          padding: 5rem 3rem;
+          padding: var(--section-pad);
         }
         .contact__grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
+          gap: var(--space-8);
           align-items: start;
           max-width: 1120px;
           margin: 0 auto;
@@ -49,19 +49,19 @@ export default function Contact() {
         }
         .contact__heading {
           font-family: var(--fb);
-          font-size: 1.1rem;
+          font-size: var(--fs-h3);
           font-weight: 600;
           color: var(--text);
           margin: 0 0 1rem;
-          line-height: 1.45;
+          line-height: var(--lh-title);
           white-space: pre-line;
         }
         .contact__intro {
           font-family: var(--fb);
-          font-size: 14px;
-          line-height: 1.65;
+          font-size: var(--fs-body);
+          line-height: var(--lh-body);
           color: var(--text-s);
-          margin: 0 0 1.5rem;
+          margin: 0 0 var(--space-5);
         }
         .contact__socials {
           display: flex;
@@ -78,7 +78,7 @@ export default function Contact() {
           border: 1px solid var(--border);
           border-radius: 8px;
           font-family: var(--fm);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           color: var(--text-s);
           text-decoration: none;
           transition:
@@ -103,9 +103,9 @@ export default function Contact() {
         }
         .contact-form__label {
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-m);
-          letter-spacing: 0.08em;
+          letter-spacing: var(--ls-label);
           text-transform: uppercase;
         }
         .contact-form__input {
@@ -115,7 +115,7 @@ export default function Contact() {
           border: 1px solid var(--border);
           border-radius: 8px;
           font-family: var(--fm);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           color: var(--text);
           outline: none;
           transition: border-color 0.2s ease;
@@ -139,7 +139,7 @@ export default function Contact() {
           border: 1px solid transparent;
           border-radius: 8px;
           font-family: var(--fm);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           color: var(--text);
           cursor: pointer;
           transition:
@@ -174,9 +174,9 @@ export default function Contact() {
         }
         .contact-form__status {
           font-family: var(--fm);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           margin: 0;
-          line-height: 1.5;
+          line-height: var(--lh-sm);
         }
         .contact-form__status--success {
           color: var(--green);

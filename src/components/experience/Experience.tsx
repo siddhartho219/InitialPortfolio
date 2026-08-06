@@ -112,12 +112,12 @@ export default function Experience() {
     <>
       <style>{`
         .experience {
-          padding: 5rem 3rem;
+          padding: var(--section-pad);
         }
         .experience__grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
+          gap: var(--space-8);
           max-width: 1120px;
           margin: 0 auto;
         }
@@ -128,10 +128,10 @@ export default function Experience() {
         }
         .experience__column-title {
           font-family: var(--fm);
-          font-size: 11px;
-          letter-spacing: 0.14em;
+          font-size: var(--fs-label);
+          letter-spacing: var(--ls-wide);
           color: var(--text-s);
-          margin: 0 0 1.5rem;
+          margin: 0 0 var(--space-5);
         }
         .experience__timeline {
           list-style: none;
@@ -177,42 +177,42 @@ export default function Experience() {
         .experience__year {
           display: block;
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--accent);
-          letter-spacing: 0.06em;
+          letter-spacing: var(--ls-label);
           margin-bottom: 0.35rem;
         }
         .experience__role {
           font-family: var(--fb);
-          font-size: 14px;
+          font-size: var(--fs-title);
           font-weight: 600;
           color: var(--text);
           margin: 0 0 0.25rem;
-          line-height: 1.35;
+          line-height: var(--lh-title);
         }
         .experience__place {
           font-family: var(--fm);
-          font-size: 11px;
+          font-size: var(--fs-caption);
           color: var(--text-s);
           margin: 0 0 0.5rem;
           text-transform: uppercase;
-          letter-spacing: 0.04em;
+          letter-spacing: var(--ls-label);
         }
         .experience__desc {
           font-family: var(--fb);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           color: var(--text-m);
-          line-height: 1.7;
+          line-height: var(--lh-body);
           margin: 0;
         }
         .experience__github {
-          margin-top: 2rem;
+          margin-top: var(--space-6);
         }
         .experience__github-label {
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-m);
-          letter-spacing: 0.12em;
+          letter-spacing: var(--ls-wide);
           margin: 0 0 0.75rem;
         }
         .experience__github-chart {

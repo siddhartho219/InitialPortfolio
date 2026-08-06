@@ -100,12 +100,12 @@ export default function About() {
     <>
       <style>{`
         .about {
-          padding: 5rem 3rem;
+          padding: var(--section-pad);
         }
         .about__grid {
           display: grid;
           grid-template-columns: 260px 1fr;
-          gap: 3rem;
+          gap: var(--space-8);
           align-items: start;
           max-width: 1120px;
           margin: 0 auto;
@@ -177,7 +177,7 @@ export default function About() {
         .about__stat-value {
           display: block;
           font-family: var(--fd);
-          font-size: 1.5rem;
+          font-size: var(--fs-stat);
           font-weight: 800;
           color: var(--accent);
           line-height: 1.1;
@@ -186,17 +186,17 @@ export default function About() {
           display: block;
           margin-top: 0.25rem;
           font-family: var(--fm);
-          font-size: 9px;
+          font-size: var(--fs-micro);
           color: var(--text-m);
-          letter-spacing: 0.08em;
+          letter-spacing: var(--ls-label);
         }
         .about__heading {
           font-family: var(--fb);
-          font-size: 1.1rem;
+          font-size: var(--fs-h3);
           font-weight: 600;
           color: var(--text);
           margin: 0 0 1rem;
-          line-height: 1.45;
+          line-height: var(--lh-title);
         }
         .about__copy {
           display: flex;
@@ -205,8 +205,8 @@ export default function About() {
         }
         .about__copy p {
           font-family: var(--fb);
-          font-size: 14px;
-          line-height: 1.65;
+          font-size: var(--fs-body);
+          line-height: var(--lh-body);
           color: var(--text-s);
           margin: 0;
         }
@@ -217,7 +217,7 @@ export default function About() {
           border-radius: 10px;
           padding: 0.9rem 1rem;
           font-family: var(--fm);
-          font-size: 12px;
+          font-size: var(--fs-sm);
         }
         .about__now-row {
           display: flex;
@@ -301,7 +301,7 @@ export default function About() {
           padding: 12px 22px;
           border-radius: 10px;
           font-family: var(--fb);
-          font-size: 14px;
+          font-size: var(--fs-body);
           font-weight: 500;
           text-decoration: none;
           transition:

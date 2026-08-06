@@ -7,7 +7,7 @@ export default function Footer() {
           text-align: center;
           padding: 2.2rem 1.2rem;
           font-family: var(--fm);
-          font-size: 11px;
+          font-size: var(--fs-label);
           color: var(--text-m);
         }
         .site-footer__line {
@@ -17,7 +17,7 @@ export default function Footer() {
         .site-footer__line--sub {
           margin-top: 0.35rem;
           opacity: 0.35;
-          font-size: 10px;
+          font-size: var(--fs-caption);
         }
         .site-footer__name {
           color: color-mix(in srgb, var(--accent) 55%, transparent);

@@ -128,6 +128,45 @@ html {
   --violet: #7c3aed;
   --violet-s: #a78bfa;
   --green: #22c55e;
+
+  /* ------------------------------------------------------------------ */
+  /* Type scale — one deliberate set, used by every section.             */
+  /* ------------------------------------------------------------------ */
+  --fs-display: clamp(2.8rem, 5.5vw, 4.6rem); /* hero name            */
+  --fs-h2: clamp(1.6rem, 2.8vw, 2.2rem); /* section headings          */
+  --fs-h3: 1.1rem; /* subheadings (about/contact)                       */
+  --fs-sub: clamp(1rem, 2vw, 1.4rem); /* hero role line                */
+  --fs-title: 0.875rem; /* card / timeline titles (14)                 */
+  --fs-title-lg: 1.25rem; /* featured card title (20)                  */
+  --fs-body: 0.875rem; /* body copy (14)                               */
+  --fs-sm: 0.75rem; /* secondary / meta text (12)                      */
+  --fs-label: 0.6875rem; /* primary labels, nav, badges (11)           */
+  --fs-caption: 0.625rem; /* pills, tags, years, eyebrow (10)          */
+  --fs-micro: 0.5625rem; /* stat labels (9)                            */
+  --fs-stat: 1.5rem; /* about stat numerals (24)                        */
+  /* line heights */
+  --lh-display: 1.03;
+  --lh-heading: 1.15;
+  --lh-title: 1.35;
+  --lh-body: 1.65;
+  --lh-sm: 1.55;
+  --lh-label: 1.4;
+  /* letter spacing */
+  --ls-display: -0.02em;
+  --ls-heading: -0.01em;
+  --ls-label: 0.08em;
+  --ls-wide: 0.12em;
+
+  /* ------------------------------------------------------------------ */
+  /* Spacing rhythm — section padding + element gaps.                   */
+  /* ------------------------------------------------------------------ */
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --section-pad: 5rem 3rem;
+  --section-gap: 2.5rem;
 }
 
 body {

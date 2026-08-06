@@ -17,22 +17,24 @@ export default function ProjectGrid() {
     <>
       <style>{`
         .projects {
-          padding: 5rem 3rem;
+          padding: var(--section-pad);
         }
         .projects__header {
           max-width: 1120px;
-          margin: 0 auto 2.5rem;
+          margin: 0 auto var(--section-gap);
         }
         .projects__title {
           font-family: var(--fd);
           font-weight: 800;
-          font-size: clamp(1.75rem, 3vw, 2.25rem);
+          font-size: var(--fs-h2);
+          line-height: var(--lh-heading);
+          letter-spacing: var(--ls-heading);
           color: var(--text);
           margin: 0;
         }
         .projects__subtitle {
           font-family: var(--fb);
-          font-size: 14px;
+          font-size: var(--fs-body);
           color: var(--text-s);
           margin: 0.5rem 0 0;
         }
@@ -117,7 +119,7 @@ export default function ProjectGrid() {
           );
         }
         .pc__body {
-          padding: 1rem;
+          padding: var(--space-4);
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
@@ -127,12 +129,12 @@ export default function ProjectGrid() {
           display: inline-flex;
           width: fit-content;
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-s);
           border: 1px solid var(--border);
           border-radius: 4px;
           padding: 2px 8px;
-          letter-spacing: 0.06em;
+          letter-spacing: var(--ls-label);
           text-transform: uppercase;
         }
         .pc__tag--featured {
@@ -141,13 +143,13 @@ export default function ProjectGrid() {
         }
         .pc__title {
           font-family: var(--fb);
-          font-size: 14px;
+          font-size: var(--fs-title);
           font-weight: 600;
           margin: 0;
-          line-height: 1.35;
+          line-height: var(--lh-title);
         }
         .pc__title--featured {
-          font-size: 20px;
+          font-size: var(--fs-title-lg);
         }
         .pc__title a {
           color: var(--text);
@@ -159,16 +161,16 @@ export default function ProjectGrid() {
         }
         .pc__desc {
           font-family: var(--fb);
-          font-size: 12px;
+          font-size: var(--fs-sm);
           color: var(--text-m);
-          line-height: 1.55;
+          line-height: var(--lh-sm);
           margin: 0;
           flex: 1;
         }
         .pc__eyebrow {
           font-family: var(--fm);
-          font-size: 10px;
-          letter-spacing: 0.08em;
+          font-size: var(--fs-caption);
+          letter-spacing: var(--ls-label);
           text-transform: uppercase;
           color: var(--accent);
           margin: 0;
@@ -181,7 +183,7 @@ export default function ProjectGrid() {
         }
         .pc__pill {
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-s);
           border: 1px solid var(--border);
           border-radius: 4px;
@@ -195,7 +197,7 @@ export default function ProjectGrid() {
         }
         .pc__link-btn {
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-s);
           text-decoration: none;
           border: 1px solid var(--border);

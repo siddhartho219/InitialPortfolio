@@ -149,8 +149,9 @@ export default function Navbar() {
         }
         .navbar__link {
           font-family: var(--fm);
-          font-size: 11px;
-          letter-spacing: 0.08em;
+          font-size: var(--fs-label);
+          line-height: var(--lh-label);
+          letter-spacing: var(--ls-label);
           text-transform: uppercase;
           color: var(--text-s);
           text-decoration: none;
@@ -169,7 +170,7 @@ export default function Navbar() {
           background: color-mix(in srgb, var(--green) 6%, transparent);
           border: 1px solid color-mix(in srgb, var(--green) 14%, transparent);
           font-family: var(--fm);
-          font-size: 11px;
+          font-size: var(--fs-label);
           color: var(--green);
           flex-shrink: 0;
         }

@@ -44,16 +44,18 @@ export default function Skills() {
     <>
       <style>{`
         .skills {
-          padding: 5rem 3rem;
+          padding: var(--section-pad);
         }
         .skills__header {
           max-width: 1120px;
-          margin: 0 auto 2.5rem;
+          margin: 0 auto var(--section-gap);
         }
         .skills__title {
           font-family: var(--fd);
           font-weight: 800;
-          font-size: clamp(1.75rem, 3vw, 2.25rem);
+          font-size: var(--fs-h2);
+          line-height: var(--lh-heading);
+          letter-spacing: var(--ls-heading);
           color: var(--text);
           margin: 0;
         }
@@ -90,7 +92,7 @@ export default function Skills() {
         }
         .skills-card__name {
           font-family: var(--fb);
-          font-size: 13px;
+          font-size: var(--fs-title);
           font-weight: 600;
           color: var(--text);
         }
@@ -108,7 +110,7 @@ export default function Skills() {
         .skills-pill {
           display: inline-block;
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-s);
           padding: 0.2rem 0.45rem;
           border-radius: 4px;

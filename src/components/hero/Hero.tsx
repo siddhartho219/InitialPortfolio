@@ -126,17 +126,18 @@ export default function Hero() {
         }
         .hero__tag {
           font-family: var(--fm);
-          font-size: 11px;
+          font-size: var(--fs-label);
           color: var(--accent);
           text-transform: uppercase;
-          letter-spacing: 0.18em;
+          letter-spacing: var(--ls-wide);
           margin: 0;
         }
         .hero__name {
           font-family: var(--fd);
           font-weight: 800;
-          font-size: clamp(2.8rem, 5.5vw, 4.6rem);
-          line-height: 1.03;
+          font-size: var(--fs-display);
+          line-height: var(--lh-display);
+          letter-spacing: var(--ls-display);
           color: var(--text);
           margin: 0;
         }
@@ -148,7 +149,7 @@ export default function Hero() {
         .hero-typewriter {
           font-family: var(--fd);
           font-weight: 700;
-          font-size: clamp(1rem, 2.2vw, 1.45rem);
+          font-size: var(--fs-sub);
           color: var(--violet-s);
           margin: 0;
           min-height: 1.5em;
@@ -172,7 +173,7 @@ export default function Hero() {
           background: color-mix(in srgb, var(--green) 6%, transparent);
           border: 1px solid color-mix(in srgb, var(--green) 14%, transparent);
           font-family: var(--fm);
-          font-size: 11px;
+          font-size: var(--fs-label);
           color: var(--green);
         }
         .hero__status-dot {
@@ -184,8 +185,8 @@ export default function Hero() {
         }
         .hero__bio {
           font-family: var(--fb);
-          font-size: 14px;
-          line-height: 1.65;
+          font-size: var(--fs-body);
+          line-height: var(--lh-body);
           color: var(--text-s);
           max-width: 500px;
           margin: 0;
@@ -200,7 +201,7 @@ export default function Hero() {
           display: flex;
           width: max-content;
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-m);
           white-space: nowrap;
           animation: hero-ticker 28s linear infinite;
@@ -224,7 +225,7 @@ export default function Hero() {
           padding: 12px 22px;
           border-radius: 10px;
           font-family: var(--fb);
-          font-size: 14px;
+          font-size: var(--fs-body);
           font-weight: 500;
           text-decoration: none;
           transition:
@@ -272,9 +273,9 @@ export default function Hero() {
         }
         .hero__scroll-label {
           font-family: var(--fm);
-          font-size: 10px;
+          font-size: var(--fs-caption);
           color: var(--text-m);
-          letter-spacing: 0.12em;
+          letter-spacing: var(--ls-wide);
           text-transform: uppercase;
         }
       `}</style>
