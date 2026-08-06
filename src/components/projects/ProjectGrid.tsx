@@ -1,6 +1,12 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import { projects } from "@/data/projects";
 import FeaturedProject from "@/components/projects/FeaturedProject";
 import ProjectCard from "@/components/projects/ProjectCard";
+import AnimateSection from "@/components/ui/AnimateSection";
+import { drop } from "@/lib/motion";
 
 export default function ProjectGrid() {
   const featuredProject = projects.find((p) => p.featured) ?? projects[0];
@@ -210,12 +216,16 @@ export default function ProjectGrid() {
           <p className="projects__subtitle">Things I&apos;ve built</p>
         </header>
 
-        <div className="projects__grid">
-          <FeaturedProject project={featuredProject} />
+        <AnimateSection className="projects__grid" variant="drop">
+          <motion.div variants={drop} style={{ gridColumn: "1 / -1" }}>
+            <FeaturedProject project={featuredProject} />
+          </motion.div>
           {rest.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
+            <motion.div key={p.slug} variants={drop}>
+              <ProjectCard project={p} />
+            </motion.div>
           ))}
-        </div>
+        </AnimateSection>
       </section>
     </>
   );

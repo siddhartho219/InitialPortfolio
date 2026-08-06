@@ -1,4 +1,9 @@
+"use client";
+
 import SkillCapsule from "@/components/skills/SkillCapsule";
+import AnimateSection from "@/components/ui/AnimateSection";
+import { pop } from "@/lib/motion";
+import { motion } from "framer-motion";
 
 const SKILL_CARDS = [
   {
@@ -122,9 +127,9 @@ export default function Skills() {
           <h2 className="skills__title">Skills</h2>
         </div>
 
-        <div className="skills__grid">
+        <AnimateSection className="skills__grid" variant="pop">
           {SKILL_CARDS.map((card) => (
-            <article key={card.name} className="skills-card">
+            <motion.article key={card.name} variants={pop} className="skills-card">
               <div className="skills-card__head">
                 <span className="skills-card__icon" aria-hidden="true">
                   {card.icon}
@@ -138,9 +143,9 @@ export default function Skills() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </AnimateSection>
       </section>
     </>
   );

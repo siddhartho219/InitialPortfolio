@@ -9,13 +9,26 @@ const BLOBS = [
   { x: 0.06, y: 0.82, r: 0.26, sx: 2, sy: -1.2 },
 ] as const;
 
+// All zone colors are a blend of the theme's two real hues only —
+// --violet (124,58,237) and --accent cyan (0,229,255) — never a new hue.
 const SECTION_COLORS: Record<string, [number, number, number]> = {
-  home: [124, 58, 237],
-  experience: [37, 99, 235],
-  projects: [37, 99, 235],
-  skills: [22, 163, 74],
-  about: [180, 83, 9],
-  contact: [6, 182, 212],
+  home: [124, 58, 237], // 100% violet — baseline
+  experience: [87, 109, 242], // violet-leaning
+  projects: [62, 144, 246], // even mix
+  skills: [31, 186, 251], // cyan-leaning
+  about: [74, 126, 244], // violet-leaning, distinct from experience
+  contact: [12, 212, 253], // mostly cyan
+};
+
+// Ambient intensity per zone — Contact dims to read as a resting point
+// rather than staying at full glow all the way to the bottom of the page.
+const SECTION_INTENSITY: Record<string, number> = {
+  home: 1,
+  experience: 1,
+  projects: 1,
+  skills: 1,
+  about: 0.85,
+  contact: 0.55,
 };
 
 const LERP_SPEED = 0.008;
@@ -61,6 +74,8 @@ export default function BackgroundCanvas() {
     const root = document.documentElement;
     let target = { r: 124, g: 58, b: 237 };
     let current = { ...target };
+    let targetIntensity = 1;
+    let currentIntensity = 1;
     root.style.setProperty("--gr", String(target.r));
     root.style.setProperty("--gg", String(target.g));
     root.style.setProperty("--gb", String(target.b));
@@ -107,6 +122,7 @@ export default function BackgroundCanvas() {
       current.r += (target.r - current.r) * LERP_SPEED;
       current.g += (target.g - current.g) * LERP_SPEED;
       current.b += (target.b - current.b) * LERP_SPEED;
+      currentIntensity += (targetIntensity - currentIntensity) * LERP_SPEED;
       root.style.setProperty("--gr", String(Math.round(current.r)));
       root.style.setProperty("--gg", String(Math.round(current.g)));
       root.style.setProperty("--gb", String(Math.round(current.b)));
@@ -120,7 +136,7 @@ export default function BackgroundCanvas() {
         const cy =
           (blob.y + Math.cos(time * 0.35 * blob.sy) * 0.06) * height;
         const radius = blob.r * Math.min(width, height);
-        const alpha = index === 0 ? 0.085 : 0.055;
+        const alpha = (index === 0 ? 0.085 : 0.055) * currentIntensity;
         const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
         gradient.addColorStop(0, `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`);
         gradient.addColorStop(1, `rgba(${rgb.r},${rgb.g},${rgb.b},0)`);
@@ -145,7 +161,7 @@ export default function BackgroundCanvas() {
         }
 
         const t = particle.life / particle.maxLife;
-        const alpha = Math.sin(t * Math.PI) * 0.35;
+        const alpha = Math.sin(t * Math.PI) * 0.35 * currentIntensity;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
@@ -173,6 +189,7 @@ export default function BackgroundCanvas() {
         if (visible.size === 0) {
           const home = SECTION_COLORS.home;
           target = { r: home[0], g: home[1], b: home[2] };
+          targetIntensity = SECTION_INTENSITY.home;
           return;
         }
 
@@ -187,6 +204,7 @@ export default function BackgroundCanvas() {
 
         const next = SECTION_COLORS[bestId] ?? SECTION_COLORS.home;
         target = { r: next[0], g: next[1], b: next[2] };
+        targetIntensity = SECTION_INTENSITY[bestId] ?? 1;
       },
       { threshold: 0.3 },
     );
