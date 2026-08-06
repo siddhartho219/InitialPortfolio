@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e293b #050816;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #050816;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+@layer base {
+  :root {
+    --background: 228 60% 5%;
+    --foreground: 214 32% 91%;
+    --card: 222 47% 11%;
+    --card-foreground: 214 32% 91%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 214 32% 91%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 214 32% 91%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 214 32% 91%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 215 16% 65%;
+    --chart-3: 222 47% 11%;
+    --chart-4: 228 60% 5%;
+    --chart-5: 214 32% 91%;
+    --radius: 0.625rem;
+    --sidebar-background: 228 60% 5%;
+    --sidebar-foreground: 214 32% 91%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 214 32% 91%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
+  }
+
+  .dark {
+    --background: 228 60% 5%;
+    --foreground: 214 32% 91%;
+    --card: 222 47% 11%;
+    --card-foreground: 214 32% 91%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 214 32% 91%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 214 32% 91%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 214 32% 91%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 215 16% 65%;
+    --chart-3: 222 47% 11%;
+    --chart-4: 228 60% 5%;
+    --chart-5: 214 32% 91%;
+    --sidebar-background: 228 60% 5%;
+    --sidebar-foreground: 214 32% 91%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 214 32% 91%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  --fd: "Syne", sans-serif;
+  --fm: "JetBrains Mono", monospace;
+  --fb: "Inter", sans-serif;
+  --bg: #060610;
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-h: rgba(255, 255, 255, 0.055);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-h: rgba(255, 255, 255, 0.13);
+  --text: #f1f5f9;
+  --text-s: #94a3b8;
+  --text-m: #7f8ea3;
+  --accent: #00e5ff;
+  --violet: #7c3aed;
+  --violet-s: #a78bfa;
+  --green: #22c55e;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fb);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (hover: none) {
+  body {
+    cursor: auto;
+  }
+}
