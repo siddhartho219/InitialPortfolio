@@ -56,12 +56,21 @@ export default function ProjectGrid() {
           transition:
             transform 0.25s ease,
             border-color 0.25s ease,
-            background 0.25s ease;
+            background 0.25s ease,
+            box-shadow 0.25s ease;
         }
         .pc:hover {
-          transform: translateY(-4px);
+          transform: translateY(-4px) scale(1.015);
           border-color: var(--border-h);
           background: var(--surface-h);
+          box-shadow:
+            0 18px 44px -18px color-mix(in srgb, var(--violet) 30%, transparent),
+            0 4px 18px -8px color-mix(in srgb, var(--accent) 16%, transparent);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pc:hover {
+            transform: none;
+          }
         }
         .pc--featured {
           grid-column: 1 / -1;

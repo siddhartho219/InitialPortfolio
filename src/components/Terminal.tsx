@@ -240,6 +240,22 @@ export default function Terminal() {
           box-shadow: 0 0 28px rgba(0,229,255,0.5);
           transform: scale(1.08);
         }
+        .term-fab:active {
+          transform: scale(0.94);
+        }
+        .term-fab:focus-visible {
+          outline: 2px solid rgba(0,229,255,0.7);
+          outline-offset: 3px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .term-fab:hover,
+          .term-fab:active {
+            transform: none;
+          }
+          .term-fab--open {
+            animation: none;
+          }
+        }
         .term-fab--open {
           border-color: rgba(0,229,255,0.8);
           box-shadow: 0 0 32px rgba(0,229,255,0.5);

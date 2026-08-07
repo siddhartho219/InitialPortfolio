@@ -148,6 +148,7 @@ export default function Navbar() {
           top: 5px;
         }
         .navbar__link {
+          position: relative;
           font-family: var(--fm);
           font-size: var(--fs-label);
           line-height: var(--lh-label);
@@ -157,9 +158,41 @@ export default function Navbar() {
           text-decoration: none;
           transition: color 0.2s ease;
         }
+        .navbar__link::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -5px;
+          height: 1.5px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, var(--accent), var(--violet));
+          opacity: 0;
+          transform: scaleX(0);
+          transform-origin: left center;
+          transition:
+            opacity 0.25s ease,
+            transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
         .navbar__link:hover,
         .navbar__link[data-active="true"] {
           color: var(--text);
+        }
+        .navbar__link:hover::after,
+        .navbar__link[data-active="true"]::after {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+        .navbar__link:focus-visible {
+          outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+          outline-offset: 4px;
+          border-radius: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .navbar__link::after {
+            transform: none;
+            transition: opacity 0.15s ease;
+          }
         }
         .navbar__badge {
           display: none;

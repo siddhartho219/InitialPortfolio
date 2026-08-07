@@ -3,10 +3,26 @@
 import { useEffect, useState } from "react";
 
 export default function SplashScreen() {
-  const [visible, setVisible] = useState(true);
+  // Reduced motion: skip the splash from the first paint — its text animation
+  // ends at opacity 0 (fill forwards), so it would otherwise flash a blank
+  // black overlay over the page.
+  const [visible, setVisible] = useState(
+    () =>
+      typeof window === "undefined" ||
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const [out, setOut] = useState(false);
 
   useEffect(() => {
+    // Reduced motion: skip the splash entirely — its text animation ends
+    // at opacity 0 (fill forwards), so under the global animation kill-switch
+    // it would show a blank black screen while the overlay still blocks the
+    // page for its full duration.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(false);
+      return;
+    }
+
     const fadeTimer = window.setTimeout(() => setOut(true), 1800);
     const unmountTimer = window.setTimeout(() => setVisible(false), 2600);
 

@@ -10,11 +10,29 @@ export default function BackgroundCanvas() {
   return (
     <>
       <style>{`
+        /* Fade the WebGL stage in once it mounts (behind the splash screen,
+           timed to complete just as the splash lifts) so it never pops in. */
+        @keyframes bg-scene-fade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
         .bg-canvas__stage {
           position: fixed;
           inset: 0;
           z-index: 0;
           pointer-events: none;
+          opacity: 0;
+          animation: bg-scene-fade 1s ease 1.5s forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bg-canvas__stage {
+            opacity: 1;
+            animation: none;
+          }
         }
         .bg-canvas__noise {
           position: fixed;
