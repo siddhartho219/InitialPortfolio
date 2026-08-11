@@ -470,7 +470,7 @@ export default function Terminal() {
             <button className="term-close" onClick={handleClose}>✕</button>
           </div>
 
-          <div className="term-body">
+          <div className="term-body" data-lenis-prevent>
             {history.map((line, i) => (
               <div key={i}>
                 {line.type === 'input' ? (

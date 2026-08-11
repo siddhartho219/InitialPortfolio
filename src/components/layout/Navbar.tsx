@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 
+import { subscribeScroll } from "@/lib/scrollStore";
+
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
   { label: "Experience", href: "#experience" },
@@ -19,7 +21,10 @@ export default function Navbar() {
   const navItems = useMemo(() => NAV_LINKS, []);
 
   useEffect(() => {
-    const onScroll = () => {
+    // Active-section detection is now driven by the shared scroll store
+    // (fed by Lenis, or native under reduced motion). The exact threshold
+    // logic (top <= 160) and #home fallback are preserved unchanged.
+    const updateActive = () => {
       const sections = navItems
         .map((item) => item.href)
         .map((href) => document.querySelector(href))
@@ -37,9 +42,7 @@ export default function Navbar() {
       }
     };
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return subscribeScroll(updateActive);
   }, [navItems]);
 
   return (

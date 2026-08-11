@@ -8,6 +8,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Lenis smooth scroll: when Lenis is active it adds `.lenis` / `.lenis-smooth`
+   to <html>, and we neutralize the CSS `scroll-behavior: smooth` that would
+   otherwise fight Lenis's own easing. When Lenis is off (reduced motion, CMS
+   routes, or before hydration) no `.lenis` class exists, so the native
+   `scroll-behavior: smooth` above keeps working exactly as before. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #1e293b #050816;

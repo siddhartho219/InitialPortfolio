@@ -5,6 +5,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { PointMaterial, Points } from "@react-three/drei";
 import * as THREE from "three";
 
+import { subscribeScroll } from "@/lib/scrollStore";
+
 // Cap particle count on small screens; 700 elsewhere (single draw call, GPU).
 function pickCount() {
   if (typeof window === "undefined") return 700;
@@ -60,20 +62,19 @@ function SceneContent() {
   }, [count]);
 
   useEffect(() => {
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollRef.current =
-        max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    };
+    // Scroll position now comes from the shared store (fed by Lenis, or by a
+    // native fallback under reduced motion). Dolly math in useFrame is
+    // unchanged — only the source of the scroll value changes.
+    const unsubscribe = subscribeScroll(({ progress }) => {
+      scrollRef.current = progress;
+    });
     const onPointerMove = (event: PointerEvent) => {
       mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = (event.clientY / window.innerHeight) * 2 - 1;
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      unsubscribe();
       window.removeEventListener("pointermove", onPointerMove);
     };
   }, []);
