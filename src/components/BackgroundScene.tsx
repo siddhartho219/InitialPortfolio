@@ -3,9 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PointMaterial, Points } from "@react-three/drei";
+import { usePathname } from "next/navigation";
+import SectionForms from "@/components/SectionForms";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 
-import { subscribeScroll } from "@/lib/scrollStore";
+gsap.registerPlugin(ScrollTrigger);
 
 // Cap particle count on small screens; 700 elsewhere (single draw call, GPU).
 function pickCount() {
@@ -24,9 +28,55 @@ function mulberry32(seed: number) {
   };
 }
 
-// Colorless background: a dark, depth-y starfield with scroll dolly and mouse
-// parallax. No per-section color tint — the scene stays neutral everywhere.
-function SceneContent() {
+// ---------------------------------------------------------------------------
+// Per-section camera "shots" — each section gets its own character (depth,
+// FOV, look-at drift) so scrolling reads as one continuous camera move through
+// a single space, restrained cinematography rather than jump cuts. Deltas
+// between adjacent sections are intentionally small.
+// ---------------------------------------------------------------------------
+type SectionShot = {
+  /** Camera depth (z). Lower = closer/tighter, higher = wider/farther. */
+  z: number;
+  /** Field of view in degrees. */
+  fov: number;
+  /** Small look-at yaw offset (world units, tiny angles). */
+  lookX: number;
+  /** Small look-at pitch offset (world units, tiny angles). */
+  lookY: number;
+};
+
+const SECTION_ORDER = [
+  "home",
+  "experience",
+  "projects",
+  "skills",
+  "about",
+  "contact",
+] as const;
+
+type SectionId = (typeof SECTION_ORDER)[number];
+
+const SECTION_SHOTS: Record<SectionId, SectionShot> = {
+  // Establishing shot: widest, farthest, slight upward gaze.
+  home: { z: 9.0, fov: 58, lookX: 0.0, lookY: 0.06 },
+  // Pull in gently, subtle yaw right.
+  experience: { z: 8.0, fov: 59.5, lookX: 0.15, lookY: 0.03 },
+  // Closer/tighter, yaw right and slightly down.
+  projects: { z: 6.5, fov: 61.5, lookX: 0.28, lookY: -0.06 },
+  // Closest, swing left and up.
+  skills: { z: 5.8, fov: 62, lookX: -0.2, lookY: 0.12 },
+  // Ease back out, gentle up.
+  about: { z: 7.0, fov: 60, lookX: -0.14, lookY: 0.16 },
+  // Calm resting position, centered.
+  contact: { z: 8.5, fov: 59, lookX: 0.0, lookY: 0.05 },
+};
+
+const HOME_SHOT: SectionShot = { ...SECTION_SHOTS.home };
+
+// Colorless background: a dark, depth-y starfield whose camera is scrubbed
+// per-section via ScrollTrigger (fed by the Lenis scroll source), with pointer
+// parallax and idle field drift layered on top. No per-section color tint.
+function SceneContent({ pathname }: { pathname: string }) {
   const fieldRef = useRef<THREE.Points>(null);
 
   const reduceMotion = useMemo(
@@ -36,8 +86,11 @@ function SceneContent() {
     [],
   );
 
-  const scrollRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
+
+  // Mutable camera proxy GSAP writes into each scroll frame; useFrame damps
+  // toward it so the camera never snaps.
+  const shotRef = useRef<SectionShot>({ ...HOME_SHOT });
 
   const [count] = useState(pickCount);
 
@@ -62,46 +115,100 @@ function SceneContent() {
   }, [count]);
 
   useEffect(() => {
-    // Scroll position now comes from the shared store (fed by Lenis, or by a
-    // native fallback under reduced motion). Dolly math in useFrame is
-    // unchanged — only the source of the scroll value changes.
-    const unsubscribe = subscribeScroll(({ progress }) => {
-      scrollRef.current = progress;
-    });
     const onPointerMove = (event: PointerEvent) => {
       mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = (event.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    return () => {
-      unsubscribe();
-      window.removeEventListener("pointermove", onPointerMove);
-    };
+    return () => window.removeEventListener("pointermove", onPointerMove);
   }, []);
+
+  // Per-section scrubbed camera choreography. One scrubbed fromTo per adjacent
+  // section pair, ranges contiguous (start: section i top at viewport top →
+  // end: section i+1 top at viewport top), so exactly one tween is active at
+  // any scroll position — a continuous interpolated number, never stepped.
+  // Rides the existing Lenis + ScrollTrigger scroll source; no new loop.
+  useEffect(() => {
+    // Reduced motion: no ScrollTrigger instances at all — useFrame keeps the
+    // camera fixed, matching the rest of the codebase's reduced-motion
+    // convention.
+    if (reduceMotion) return;
+
+    const elements = SECTION_ORDER.map((id) =>
+      document.getElementById(id),
+    ).filter((el): el is HTMLElement => Boolean(el));
+
+    // Reset to the establishing shot (also covers route changes to pages that
+    // have no section DOM, e.g. /projects/[slug]).
+    Object.assign(shotRef.current, HOME_SHOT);
+
+    if (elements.length < 2) return;
+
+    const triggers: ScrollTrigger[] = [];
+
+    for (let i = 0; i < elements.length - 1; i += 1) {
+      const from = SECTION_SHOTS[SECTION_ORDER[i] as SectionId];
+      const to = SECTION_SHOTS[SECTION_ORDER[i + 1] as SectionId];
+
+      const tween = gsap.fromTo(
+        shotRef.current,
+        { ...from },
+        { ...to, ease: "none", immediateRender: false },
+      );
+
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: elements[i],
+          start: "top top",
+          endTrigger: elements[i + 1],
+          end: "top top",
+          scrub: true,
+          animation: tween,
+        }),
+      );
+    }
+
+    // Re-measure now that triggers exist; ScrollTrigger also refreshes on load.
+    ScrollTrigger.refresh();
+
+    return () => {
+      triggers.forEach((trigger) => trigger.kill());
+    };
+  }, [reduceMotion, pathname]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05); // clamp tab-switch spikes
     const damp = 1 - Math.pow(0.001, dt);
 
-    const camera = state.camera;
+    // The Canvas is configured with a PerspectiveCamera; state.camera is typed
+    // as the base Camera union which has no fov.
+    const camera = state.camera as THREE.PerspectiveCamera;
     if (!reduceMotion) {
-      // Slow forward dolly as the user scrolls down.
-      const targetZ = 9 - scrollRef.current * 5;
-      camera.position.z += (targetZ - camera.position.z) * damp;
-      // Small parallax look-around from the pointer.
+      const shot = shotRef.current;
+
+      // Per-section depth/FOV (replaces the old linear dolly) — damped.
+      camera.position.z += (shot.z - camera.position.z) * damp;
+      camera.fov += (shot.fov - camera.fov) * damp;
+      camera.updateProjectionMatrix();
+
+      // Small parallax look-around from the pointer (unchanged, layered on top).
       camera.position.x +=
         (mouseRef.current.x * 0.9 - camera.position.x) * damp;
       camera.position.y +=
         (mouseRef.current.y * 0.5 - camera.position.y) * damp;
-      camera.lookAt(0, 0, 0);
 
-      // Gentle idle drift of the field itself.
+      // Small per-section look-at drift (restrained yaw/pitch).
+      camera.lookAt(shot.lookX, shot.lookY, 0);
+
+      // Gentle idle drift of the field itself (unchanged).
       if (fieldRef.current) {
         fieldRef.current.rotation.y += dt * 0.02;
       }
     } else {
-      // Reduced motion: fixed framing, no drift, no parallax.
+      // Reduced motion: fixed framing, no drift, no parallax, no choreography.
       camera.position.set(0, 0, 9);
+      camera.fov = 60;
+      camera.updateProjectionMatrix();
       camera.lookAt(0, 0, 0);
     }
   });
@@ -131,6 +238,7 @@ function SceneContent() {
 }
 
 export default function BackgroundScene() {
+  const pathname = usePathname();
   const [active, setActive] = useState(true);
 
   useEffect(() => {
@@ -160,7 +268,9 @@ export default function BackgroundScene() {
         pointerEvents: "none",
       }}
     >
-      <SceneContent />
+      <SceneContent pathname={pathname} />
+      {/* Pilot: scrubbed wireframe forms for #projects and #skills. */}
+      <SectionForms />
     </Canvas>
   );
 }
