@@ -32,7 +32,7 @@ type CmsRecord = {
 };
 
 type CollectionManagerProps = {
-  collectionName: "projects" | "skills" | "experience";
+  collectionName: "projects" | "skills" | "experience" | "blogs";
   title: string;
   description: string;
   fields: FieldConfig[];

@@ -45,16 +45,19 @@ type SectionShot = {
   lookY: number;
 };
 
-const SECTION_ORDER = [
-  "home",
-  "experience",
-  "projects",
-  "skills",
-  "about",
-  "contact",
-] as const;
-
-type SectionId = (typeof SECTION_ORDER)[number];
+// NOTE: there is intentionally no fixed SECTION_ORDER array here. The scrub
+// pairing below derives the section sequence from live DOM order at runtime,
+// so reordering sections in page.tsx can never break the camera choreography.
+// (Explicit union rather than keyof typeof SECTION_SHOTS to avoid a circular
+// type alias.)
+type SectionId =
+  | "home"
+  | "about"
+  | "experience"
+  | "projects"
+  | "blog"
+  | "skills"
+  | "contact";
 
 const SECTION_SHOTS: Record<SectionId, SectionShot> = {
   // Establishing shot: widest, farthest, slight upward gaze.
@@ -63,6 +66,8 @@ const SECTION_SHOTS: Record<SectionId, SectionShot> = {
   experience: { z: 8.0, fov: 59.5, lookX: 0.15, lookY: 0.03 },
   // Closer/tighter, yaw right and slightly down.
   projects: { z: 6.5, fov: 61.5, lookX: 0.28, lookY: -0.06 },
+  // Between projects and skills: continuing the inward arc, near-neutral yaw.
+  blog: { z: 6.1, fov: 61.8, lookX: 0.08, lookY: 0.02 },
   // Closest, swing left and up.
   skills: { z: 5.8, fov: 62, lookX: -0.2, lookY: 0.12 },
   // Ease back out, gentle up.
@@ -134,9 +139,13 @@ function SceneContent({ pathname }: { pathname: string }) {
     // convention.
     if (reduceMotion) return;
 
-    const elements = SECTION_ORDER.map((id) =>
-      document.getElementById(id),
-    ).filter((el): el is HTMLElement => Boolean(el));
+    // Derive the actual section sequence from live DOM order (all
+    // <section id> elements whose id has a shot in SECTION_SHOTS). This is
+    // order-agnostic: reordering sections in page.tsx just changes the DOM
+    // order, and the adjacent-pair tweens below follow it automatically.
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("section[id]"),
+    ).filter((el) => el.id in SECTION_SHOTS);
 
     // Reset to the establishing shot (also covers route changes to pages that
     // have no section DOM, e.g. /projects/[slug]).
@@ -147,8 +156,8 @@ function SceneContent({ pathname }: { pathname: string }) {
     const triggers: ScrollTrigger[] = [];
 
     for (let i = 0; i < elements.length - 1; i += 1) {
-      const from = SECTION_SHOTS[SECTION_ORDER[i] as SectionId];
-      const to = SECTION_SHOTS[SECTION_ORDER[i + 1] as SectionId];
+      const from = SECTION_SHOTS[elements[i].id as SectionId];
+      const to = SECTION_SHOTS[elements[i + 1].id as SectionId];
 
       const tween = gsap.fromTo(
         shotRef.current,

@@ -30,22 +30,25 @@ function MobileGlobalStyles() {
     <style>{`
       @media (max-width: 768px) {
         section#home,
+        section#about,
         section#experience,
         section#projects,
+        section#blog,
         section#skills,
-        section#about,
         section#contact,
         .hero,
+        .about,
         .experience,
         .projects,
+        .blog,
         .skills,
-        .about,
         .contact {
           padding: 5rem 1.2rem 3rem !important;
         }
         .experience__grid,
         .about__grid,
-        .contact__grid {
+        .contact__grid,
+        .blog__grid {
           grid-template-columns: 1fr !important;
         }
         .pc--featured {

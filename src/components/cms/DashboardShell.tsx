@@ -7,6 +7,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  Newspaper,
   UserRoundCog,
   X,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/dashboard", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/messages", label: "Messages", icon: Mail },
   { href: "/dashboard/projects", label: "Projects", icon: BriefcaseBusiness },
+  { href: "/dashboard/blogs", label: "Blog", icon: Newspaper },
   { href: "/dashboard/skills", label: "Skills", icon: Code2 },
   { href: "/dashboard/experience", label: "Experience", icon: UserRoundCog },
 ];
