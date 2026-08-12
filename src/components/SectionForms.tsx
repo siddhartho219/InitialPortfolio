@@ -100,7 +100,7 @@ function ProjectGraph({
   });
 
   return (
-    <group ref={groupRef} position={position} scale={1.15}>
+    <group ref={groupRef} position={position} scale={0.45}>
       <lineSegments geometry={linesGeo}>
         <lineBasicMaterial
           ref={linesMat}
@@ -115,7 +115,7 @@ function ProjectGraph({
         <pointsMaterial
           ref={nodesMat}
           color="#f0f3fc"
-          size={0.14}
+          size={0.2}
           transparent
           opacity={0}
           sizeAttenuation
@@ -155,7 +155,7 @@ function CrystalForm({
   });
 
   return (
-    <group ref={groupRef} position={position} scale={1.1}>
+    <group ref={groupRef} position={position} scale={0.5}>
       <lineSegments geometry={geo}>
         <lineBasicMaterial
           ref={mat}
@@ -198,11 +198,13 @@ export default function SectionForms() {
       // Ramp in fast, hold at full opacity through the section's in-view
       // middle, then fade out — so the form is clearly present when the
       // section is centered and when the camera has settled on its shot.
+      // Peak hold value 0.4 — ambient presence, never a foreground element.
+      // (The fade-in/hold/fade-out TIMING shape is unchanged.)
       const tween = gsap.to(refObj, {
         keyframes: [
           { value: 0, duration: 0.15 },
-          { value: 1, duration: 0.1 }, // fast ramp in
-          { value: 1, duration: 0.55 }, // genuine hold
+          { value: 0.4, duration: 0.1 }, // fast ramp in
+          { value: 0.4, duration: 0.55 }, // genuine hold
           { value: 0, duration: 0.2 }, // fade out
         ],
         ease: "none",
@@ -232,10 +234,21 @@ export default function SectionForms() {
 
   return (
     <>
-      {/* Projects shot: camera z 6.5, fov 61.5, lookAt (0.28, -0.06, 0). */}
-      <ProjectGraph opacity={projectsOpacity.current} position={[3.0, 0.6, -8]} />
-      {/* Skills shot: camera z 5.8, fov 62, lookAt (-0.2, 0.12, 0). */}
-      <CrystalForm opacity={skillsOpacity.current} position={[-2.8, 1.0, -7.5]} />
+      {/* Projects shot: camera z 6.5, fov 61.5, lookAt (0.28, -0.06, 0).
+          Positioned deep in the right-hand band OUTSIDE the 1120px content
+          column (deeper z = smaller parallax swing). Projection audit at
+          1280/1440/1920: clear of content by 48-56px at the section-centered
+          viewing camera and by 47-168px at the shot camera — never overlaps
+          the grid regardless of reflow. */}
+      <ProjectGraph opacity={projectsOpacity.current} position={[38.0, 1.9, -36]} />
+      {/* Skills shot: camera z 5.8, fov 62, lookAt (-0.2, 0.12, 0).
+          Moved from center-over-grid to the LEFT band — the confirmed overlap
+          fix. Composed for the section-CENTERED camera (the real viewing
+          position, where the old crystal sat at x≈510 over the pills): at
+          1280 it projects to x≈17-25, ≥54px clear of content, fully in view.
+          It drifts off-screen left only at the brief section-top moment when
+          the camera is at the blog shot (lx 0.08) — never toward content. */}
+      <CrystalForm opacity={skillsOpacity.current} position={[-35.0, 3.1, -36]} />
     </>
   );
 }

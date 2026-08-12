@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { PointMaterial, Points } from "@react-three/drei";
 import { usePathname } from "next/navigation";
 import SectionForms from "@/components/SectionForms";
-import SpaceLandmark from "@/components/SpaceLandmark";
+import SpaceLandmarks from "@/components/SpaceLandmarks";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -281,8 +281,10 @@ export default function BackgroundScene() {
       <SceneContent pathname={pathname} />
       {/* Pilot: scrubbed wireframe forms for #projects and #skills. */}
       <SectionForms />
-      {/* Pilot: #about space landmark — neutral by default, ?landmark=color for the subtle-color variant. */}
-      <SpaceLandmark />
+      {/* Space-journey landmarks: #about planet, #experience star cluster,
+          #blog debris field, #contact arrival — one shared accent palette,
+          scrubbed to their own sections. */}
+      <SpaceLandmarks />
     </Canvas>
   );
 }
