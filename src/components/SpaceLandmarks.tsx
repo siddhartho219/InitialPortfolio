@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -50,6 +50,32 @@ export const LANDMARK_PARTICLE = "#f0c9a8"; // atmosphere/particle accents
 
 type FormOpacity = { value: number };
 
+// ---------------------------------------------------------------------------
+// #about PILOT: cursor-reactive drift + fog-density scrub (this round).
+//
+// The planet gently drifts toward the visitor's cursor while #about is in
+// view, and the scene's fog density (never its color) rises modestly while the
+// section is centered — "arriving somewhere" without any color change.
+//
+// Drift cap in world units: the audit measured ≥49px of clearance between the
+// planet and real content at 1280. At the planet's depth under the About shot
+// (camera z 7, fov 60; object z -36) one world unit ≈ 18.4-18.7px, so 0.85
+// world units ≈ 16px of screen movement — full drift plus the existing camera
+// parallax swing still leaves ~30px clear. Opacity-scaling keeps the drift
+// tiny at the section fringes where the scroll envelope is tightest.
+const ABOUT_DRIFT_CAP = 0.85; // world units ≈ 16px of screen movement at 1280
+const ABOUT_OPACITY_PEAK = 0.4; // the scrub hold value (see setup() below)
+
+// Fog is a fixed FogExp2 at #060610, density 0.02, defined in SceneContent.
+// While #about is centered we scrub the DENSITY up modestly and back down —
+// same color, same keyframe/hold shape as the opacity scrubs. Peak 0.024 was
+// tuned live: the far starfield (≈29 units) dims ~0.71 → ~0.59 and the
+// landmark (≈43 units) loses ~18% of its pixels — clearly hazier, but the
+// planet stays fully legible (0.026+ starts burying it, 0.025 was tried and
+// rejected). Fog never touches 2D content (DOM renders above the canvas).
+const FOG_BASELINE = 0.02;
+const ABOUT_FOG_PEAK = 0.024;
+
 // Deterministic 0..1 pseudo-random from an index (stable between renders).
 function hash01(seed: number) {
   const x = Math.sin(seed * 12.9898) * 43758.5453;
@@ -77,6 +103,28 @@ function AboutPlanet({
   const groupRef = useRef<THREE.Group>(null);
   const linesMat = useRef<THREE.LineBasicMaterial>(null);
   const ringMat = useRef<THREE.PointsMaterial>(null);
+
+  // #about pilot: cursor-reactive drift. Self-contained listener mirroring
+  // SceneContent's normalization (x,y in -1..1). The planet never follows
+  // instantly — it eases toward the capped target with the same damp used for
+  // the camera parallax, and scales down with the opacity scrub so it only
+  // strays while actually visible and composed.
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const driftRef = useRef({ x: 0, y: 0 });
+  // Live camera for the drift safety clamp (see useFrame) — read-only.
+  const camera = useThree((state) => state.camera) as THREE.PerspectiveCamera;
+  // Scratch vectors for projection (no per-frame allocation).
+  const projNoDrift = useMemo(() => new THREE.Vector3(), []);
+  const projDrift = useMemo(() => new THREE.Vector3(), []);
+
+  useEffect(() => {
+    const onPointerMove = (event: PointerEvent) => {
+      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = (event.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
+  }, []);
 
   const { sphereGeo, ringGeo } = useMemo(() => {
     // Icosahedron detail 1 = 42 verts / 80 faces — trivially cheap, higher
@@ -107,6 +155,66 @@ function AboutPlanet({
       // Slow, majestic idle rotation — distinct from the field/forms.
       g.rotation.y += dt * 0.03;
       g.rotation.x += dt * 0.012;
+
+      // Gentle magnetic drift toward the cursor. Target is clamped to a
+      // circle of radius ABOUT_DRIFT_CAP, then damped (spring-like ease, same
+      // damp constant as SceneContent's camera parallax) and scaled by the
+      // opacity scrub so drift vanishes at the section's fringes.
+      const visScale = Math.min(1, opacity.value / ABOUT_OPACITY_PEAK);
+      let tx = mouseRef.current.x * ABOUT_DRIFT_CAP;
+      let ty = mouseRef.current.y * ABOUT_DRIFT_CAP;
+      const mag = Math.hypot(tx, ty);
+      if (mag > ABOUT_DRIFT_CAP) {
+        const k = ABOUT_DRIFT_CAP / mag;
+        tx *= k;
+        ty *= k;
+      }
+      const damp = 1 - Math.pow(0.001, dt);
+      driftRef.current.x += (tx - driftRef.current.x) * damp;
+      driftRef.current.y += (ty - driftRef.current.y) * damp;
+
+      // ---- Drift safety clamp (hard gate) --------------------------------
+      // SceneContent's pointer parallax swings the whole scene ±0.9 world
+      // units via a lookAt pivot — measured live, that alone moves the planet
+      // from x≈1415 (mouse far right) to x≈1133 (mouse far left, 81px inside
+      // the 1120px content band) at 1280. Our drift must never WIDEN that
+      // reach: project the planet's leftmost footprint point (center − 0.75
+      // world: the atmosphere ring reaches ~1.25 · scale 0.6 = 0.75 right of
+      // center) through the live camera each frame, and back the X drift off
+      // toward zero (never leftward) until that edge is no closer to content
+      // than BOTH (a) the content band plus a small margin AND (b) where it
+      // would sit with zero drift at this same camera position (parity — we
+      // never make the audited parallax worst case worse). At neutral mouse
+      // the full 16px cap is inside the 48px audited margin, so drift is
+      // unrestricted there; as the parallax swings the planet toward content
+      // the safe range auto-shrinks to zero — the "reduce the drift range
+      // further" remedy, applied continuously, without touching the audited
+      // base position.
+      camera.updateMatrixWorld();
+      projNoDrift.set(position[0] - 0.75, g.position.y, position[2]).project(camera);
+      projDrift
+        .set(position[0] - 0.75 + driftRef.current.x, g.position.y, position[2])
+        .project(camera);
+      const noDriftLeft = ((projNoDrift.x + 1) / 2) * window.innerWidth;
+      const driftLeft = ((projDrift.x + 1) / 2) * window.innerWidth;
+      // Content band is 1120px centered (right edge = innerWidth*0.9375);
+      // keep a small breathing margin so "touching" counts as a fail.
+      const contentEdgePx = window.innerWidth * 0.9375 + 12;
+      const floorPx = Math.min(noDriftLeft, contentEdgePx);
+      let dx = driftRef.current.x;
+      if (dx < 0 && driftLeft < floorPx - 0.5) {
+        // Monotonic, near-linear here: step dx toward the floor, never past
+        // zero (the planet must not drift left of the safe edge, and must
+        // never be pushed right of base against the cursor direction).
+        const slope = Math.max(
+          4,
+          (driftLeft - noDriftLeft) / Math.max(1e-4, dx),
+        );
+        dx = Math.min(0, dx + (floorPx - driftLeft) / slope);
+      }
+
+      g.position.x = position[0] + dx * visScale;
+      g.position.y = position[1] + driftRef.current.y * visScale;
     }
     if (linesMat.current) linesMat.current.opacity = opacity.value;
     if (ringMat.current) ringMat.current.opacity = opacity.value * 0.8;
@@ -429,6 +537,37 @@ export default function SpaceLandmarks() {
   const blogOpacity = useRef<FormOpacity>({ value: 0 });
   const contactOpacity = useRef<FormOpacity>({ value: 0 });
 
+  // #about pilot: scrubbed fog density (0..1 multiplier; 1 = ABOUT_FOG_PEAK).
+  // Reads the fog that SceneContent attaches to the scene (never its color),
+  // writes scene.fog.density each frame. Under reduced motion the scrub is
+  // never created, so the density stays at baseline throughout.
+  const scene = useThree((state) => state.scene);
+  const fogRef = useRef<THREE.FogExp2 | null>(null);
+  const fogDensity = useRef<FormOpacity>({ value: 0 });
+
+  useEffect(() => {
+    if (scene.fog instanceof THREE.FogExp2) {
+      fogRef.current = scene.fog;
+    }
+  }, [scene]);
+
+  // Restore baseline density if this component unmounts mid-scrub (route
+  // change while #about is in view) so the fog never leaks to other pages.
+  useEffect(
+    () => () => {
+      if (fogRef.current) fogRef.current.density = FOG_BASELINE;
+    },
+    [],
+  );
+
+  useFrame(() => {
+    if (fogRef.current) {
+      const v = fogDensity.current.value;
+      fogRef.current.density =
+        FOG_BASELINE + (ABOUT_FOG_PEAK - FOG_BASELINE) * v;
+    }
+  });
+
   // Opacity scrub: one keyframed tween per landmark over its section's full
   // scroll range (fade in → hold while centered → fade out), driven by
   // ScrollTrigger scrub on the existing Lenis scroll source. No new loop.
@@ -473,10 +612,39 @@ export default function SpaceLandmarks() {
     setup("experience", experienceOpacity.current);
     setup("blog", blogOpacity.current);
     setup("contact", contactOpacity.current);
+
+    // #about pilot: scrub fog DENSITY (not color) up while #about is centered
+    // and back to baseline as the section is entered/exited — same
+    // keyframe/hold shape as the opacity scrubs, riding the same scroll
+    // source. The value (0..1) is consumed in useFrame above.
+    const fogEl = document.getElementById("about");
+    if (fogEl) {
+      const fogTween = gsap.to(fogDensity.current, {
+        keyframes: [
+          { value: 0, duration: 0.15 },
+          { value: 1, duration: 0.1 }, // fast ramp in
+          { value: 1, duration: 0.55 }, // genuine hold while centered
+          { value: 0, duration: 0.2 }, // fade back out
+        ],
+        ease: "none",
+        immediateRender: false,
+      });
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: fogEl,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+          animation: fogTween,
+        }),
+      );
+    }
+
     ScrollTrigger.refresh();
 
     return () => {
       triggers.forEach((t) => t.kill());
+      fogDensity.current.value = 0; // density returns to baseline with the tween killed
     };
   }, [reduceMotion, pathname]);
 
