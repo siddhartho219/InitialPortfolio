@@ -79,6 +79,27 @@ const SECTION_SHOTS: Record<SectionId, SectionShot> = {
 
 const HOME_SHOT: SectionShot = { ...SECTION_SHOTS.home };
 
+// ---------------------------------------------------------------------------
+// Pointer-parallax safety cap (world units of camera displacement).
+//
+// The camera's lookAt pivot sits ~7.5 units in front of it while the
+// landmarks live at z ≈ −36, so a sideways camera translation is amplified
+// ~15× at their depth: the old unbounded ±0.9 swing moved landmark edges up
+// to ~140px toward the 1120px content band at extreme cursor positions on
+// 1280 screens (verified with the shared projection helper — see the audit).
+// This cap limits the camera displacement to ±0.10 x / ±0.056 y, cutting the
+// worst-case swing ~9× while keeping every object ≥40px clear of content.
+//
+// Applied as a tanh soft limit, not a hard clamp: the response stays
+// linear-feeling near the cursor's center region and approaches the cap
+// asymptotically at the screen edges — no rigid snap at the boundary, and
+// the existing per-frame damping still smooths every step.
+const PARALLAX_CAP_X = 0.1;
+const PARALLAX_CAP_Y = PARALLAX_CAP_X * (0.5 / 0.9); // keep the 0.9:0.5 feel ratio
+// How gradually the tanh saturates toward the cap (0.25 → ~half response at
+// a quarter-screen mouse position, ~81% at half-screen, full near the edges).
+const PARALLAX_SOFTNESS = 0.25;
+
 // Colorless background: a dark, depth-y starfield whose camera is scrubbed
 // per-section via ScrollTrigger (fed by the Lenis scroll source), with pointer
 // parallax and idle field drift layered on top. No per-section color tint.
@@ -201,11 +222,17 @@ function SceneContent({ pathname }: { pathname: string }) {
       camera.fov += (shot.fov - camera.fov) * damp;
       camera.updateProjectionMatrix();
 
-      // Small parallax look-around from the pointer (unchanged, layered on top).
-      camera.position.x +=
-        (mouseRef.current.x * 0.9 - camera.position.x) * damp;
-      camera.position.y +=
-        (mouseRef.current.y * 0.5 - camera.position.y) * damp;
+      // Small parallax look-around from the pointer, capped (see the
+      // PARALLAX_CAP_* constants above) — layered on top of the shot, with
+      // the same damped chase as before so the cap never feels rigid.
+      const rawX = mouseRef.current.x * 0.9;
+      const rawY = mouseRef.current.y * 0.5;
+      const cappedX =
+        PARALLAX_CAP_X * Math.tanh((rawX * PARALLAX_SOFTNESS) / PARALLAX_CAP_X);
+      const cappedY =
+        PARALLAX_CAP_Y * Math.tanh((rawY * PARALLAX_SOFTNESS) / PARALLAX_CAP_Y);
+      camera.position.x += (cappedX - camera.position.x) * damp;
+      camera.position.y += (cappedY - camera.position.y) * damp;
 
       // Small per-section look-at drift (restrained yaw/pitch).
       camera.lookAt(shot.lookX, shot.lookY, 0);

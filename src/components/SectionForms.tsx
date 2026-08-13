@@ -236,19 +236,21 @@ export default function SectionForms() {
     <>
       {/* Projects shot: camera z 6.5, fov 61.5, lookAt (0.28, -0.06, 0).
           Positioned deep in the right-hand band OUTSIDE the 1120px content
-          column (deeper z = smaller parallax swing). Projection audit at
-          1280/1440/1920: clear of content by 48-56px at the section-centered
-          viewing camera and by 47-168px at the shot camera — never overlaps
-          the grid regardless of reflow. */}
-      <ProjectGraph opacity={projectsOpacity.current} position={[38.0, 1.9, -36]} />
+          column. Re-solved this round with the shared projection helper
+          against the newly CAPPED parallax (±0.1 world): worst clearance
+          across every visible camera state × extreme cursor is ≥44px at
+          1280/1440/1920. At 1280 the node-graph hugs the right screen edge;
+          at 1440+ it is comfortably in frame. */}
+      <ProjectGraph opacity={projectsOpacity.current} position={[38.64, 1.9, -36]} />
       {/* Skills shot: camera z 5.8, fov 62, lookAt (-0.2, 0.12, 0).
           Moved from center-over-grid to the LEFT band — the confirmed overlap
-          fix. Composed for the section-CENTERED camera (the real viewing
-          position, where the old crystal sat at x≈510 over the pills): at
-          1280 it projects to x≈17-25, ≥54px clear of content, fully in view.
-          It drifts off-screen left only at the brief section-top moment when
-          the camera is at the blog shot (lx 0.08) — never toward content. */}
-      <CrystalForm opacity={skillsOpacity.current} position={[-35.0, 3.1, -36]} />
+          fix. Re-solved this round: worst clearance ≥44px at the skills shot
+          (its tightest state — even at extreme cursor, where the lookAt yaw
+          swings the crystal toward content) at 1280/1440/1920. At 1280 it
+          sits at/past the left screen edge when the section is centered
+          (matching the accepted edge-hugging baseline) and fully in view at
+          wider widths — never toward content. */}
+      <CrystalForm opacity={skillsOpacity.current} position={[-37.71, 3.1, -36]} />
     </>
   );
 }

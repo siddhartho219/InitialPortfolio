@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
+import {
+  ndcToScreenX,
+  projectWorldToNdcWithCamera,
+} from "@/lib/threeProjection";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -113,9 +117,6 @@ function AboutPlanet({
   const driftRef = useRef({ x: 0, y: 0 });
   // Live camera for the drift safety clamp (see useFrame) — read-only.
   const camera = useThree((state) => state.camera) as THREE.PerspectiveCamera;
-  // Scratch vectors for projection (no per-frame allocation).
-  const projNoDrift = useMemo(() => new THREE.Vector3(), []);
-  const projDrift = useMemo(() => new THREE.Vector3(), []);
 
   useEffect(() => {
     const onPointerMove = (event: PointerEvent) => {
@@ -174,29 +175,31 @@ function AboutPlanet({
       driftRef.current.y += (ty - driftRef.current.y) * damp;
 
       // ---- Drift safety clamp (hard gate) --------------------------------
-      // SceneContent's pointer parallax swings the whole scene ±0.9 world
-      // units via a lookAt pivot — measured live, that alone moves the planet
-      // from x≈1415 (mouse far right) to x≈1133 (mouse far left, 81px inside
-      // the 1120px content band) at 1280. Our drift must never WIDEN that
-      // reach: project the planet's leftmost footprint point (center − 0.75
-      // world: the atmosphere ring reaches ~1.25 · scale 0.6 = 0.75 right of
-      // center) through the live camera each frame, and back the X drift off
-      // toward zero (never leftward) until that edge is no closer to content
-      // than BOTH (a) the content band plus a small margin AND (b) where it
-      // would sit with zero drift at this same camera position (parity — we
-      // never make the audited parallax worst case worse). At neutral mouse
-      // the full 16px cap is inside the 48px audited margin, so drift is
-      // unrestricted there; as the parallax swings the planet toward content
-      // the safe range auto-shrinks to zero — the "reduce the drift range
-      // further" remedy, applied continuously, without touching the audited
-      // base position.
-      camera.updateMatrixWorld();
-      projNoDrift.set(position[0] - 0.75, g.position.y, position[2]).project(camera);
-      projDrift
-        .set(position[0] - 0.75 + driftRef.current.x, g.position.y, position[2])
-        .project(camera);
-      const noDriftLeft = ((projNoDrift.x + 1) / 2) * window.innerWidth;
-      const driftLeft = ((projDrift.x + 1) / 2) * window.innerWidth;
+      // SceneContent's pointer parallax (now capped at ±0.1 world — see the
+      // audit) still swings the whole scene via a lookAt pivot, so our drift
+      // must never WIDEN that reach: project the planet's leftmost footprint
+      // point (center − 0.75 world: the atmosphere ring reaches ~1.25 · scale
+      // 0.6 = 0.75 right of center) through the live camera each frame, and
+      // back the X drift off toward zero (never leftward) until that edge is
+      // no closer to content than BOTH (a) the content band plus a small
+      // margin AND (b) where it would sit with zero drift at this same camera
+      // position (parity — we never make the parallax worst case worse). At
+      // neutral mouse the 16px cap is well inside the audited margin, so
+      // drift is unrestricted there; as the parallax swings the planet toward
+      // content the safe range auto-shrinks to zero — the "reduce the drift
+      // range further" remedy, applied continuously, without touching the
+      // audited base position. Uses the shared threeProjection helper (the
+      // same math the verification tooling and this round's solver use).
+      const noDrift = projectWorldToNdcWithCamera(
+        [position[0] - 0.75, g.position.y, position[2]],
+        camera,
+      );
+      const drift = projectWorldToNdcWithCamera(
+        [position[0] - 0.75 + driftRef.current.x, g.position.y, position[2]],
+        camera,
+      );
+      const noDriftLeft = ndcToScreenX(noDrift.x, window.innerWidth);
+      const driftLeft = ndcToScreenX(drift.x, window.innerWidth);
       // Content band is 1120px centered (right edge = innerWidth*0.9375);
       // keep a small breathing margin so "touching" counts as a fail.
       const contentEdgePx = window.innerWidth * 0.9375 + 12;
@@ -654,22 +657,24 @@ export default function SpaceLandmarks() {
     <>
       {/* All landmarks now live in the side band OUTSIDE the 1120px content
           column, so they can never sit over section text/cards at any desktop
-          width. Each position was solved with the real camera projection at
-          1280/1440/1920 (see the audit): at 1280 the footprint is 26px clear
-          of content (6-10px from the screen edge); at 1440+ it gains 86-199px. */}
-      {/* About shot: camera z 7.0, fov 60, lookAt (-0.14, 0.16, 0). Composed
-          for the centered viewing camera: ≥49px clear of content at all three
-          audit widths; the ring extent (1.25) now projects to ~14px. */}
-      <AboutPlanet opacity={aboutOpacity.current} position={[33.3, 3.9, -36]} />
+          width. Positions were re-solved this round with the shared projection
+          helper against the NEWLY CAPPED parallax (±0.1 world — the old
+          ±0.9 swing moved edges up to ~140px toward content at extreme
+          cursor): worst-case clearance across every visible camera state ×
+          extreme cursor is ≥44px at 1280 (48px for the planet, which carries
+          the cursor-drift feature) and ≥44px at 1440/1920. At 1280 the
+          tightest objects hug the viewport edge (partially off-frame during
+          the middle of their section's scroll), gaining room at wider widths. */}
+      <AboutPlanet opacity={aboutOpacity.current} position={[36.22, 3.9, -36]} />
       {/* Experience shot: camera z 8.0, fov 59.5, lookAt (0.15, 0.03, 0). */}
       <ExperienceCluster
         opacity={experienceOpacity.current}
-        position={[36.1, 2.4, -36]}
+        position={[38.19, 2.4, -36]}
       />
       {/* Blog shot: camera z 6.1, fov 61.8, lookAt (0.08, 0.02, 0). */}
-      <BlogDebris opacity={blogOpacity.current} position={[36.1, 3.6, -36]} />
+      <BlogDebris opacity={blogOpacity.current} position={[36.37, 3.6, -36]} />
       {/* Contact shot: camera z 8.5, fov 59, lookAt (0, 0.05, 0). */}
-      <ContactArrival opacity={contactOpacity.current} position={[34.3, 1.6, -36]} />
+      <ContactArrival opacity={contactOpacity.current} position={[35.19, 1.6, -36]} />
     </>
   );
 }
