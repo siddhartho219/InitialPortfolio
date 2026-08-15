@@ -82,7 +82,7 @@ export default async function ProjectPage({
       <Container>
         <div className="py-14">
           <Link
-            href="/#projects"
+            href="/projects"
             className="text-sm text-brand-muted transition-colors hover:text-brand-blue"
           >
             ← All Projects

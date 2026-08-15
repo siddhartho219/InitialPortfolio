@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Leaf, FileText, Globe, RefreshCw, Smartphone, Wifi, Laptop, BadgeCheck, Mail, LayoutDashboard, Lock, Database } from "lucide-react";
+import { Bot, Leaf, FileText, Globe, RefreshCw, Smartphone, Wifi, Laptop, BadgeCheck, Mail, LayoutDashboard, Lock, Database, BookMarked } from "lucide-react";
 
 const ACCENT = "#00e5ff";
 const MUTED = "#5a6b7a";
@@ -97,6 +97,18 @@ export default function ProjectIllustration({ slug }: { slug: string }) {
           <div style={iconWrap("30%", "48%")}><LayoutDashboard size={34} color={ACCENT} strokeWidth={1.5} /></div>
           <div style={iconWrap("70%", "48%")}><Database size={30} color={MUTED} strokeWidth={1.5} /></div>
           <div style={iconWrap("50%", "24%")}><Lock size={16} color={ACCENT} strokeWidth={1.5} /></div>
+        </div>
+      );
+    case "breadcrumb":
+      return (
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <svg viewBox="0 0 100 100" style={lineStyle} preserveAspectRatio="none">
+            <path d="M 30 62 L 70 62" stroke={ACCENT} strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+            <path d="M 30 62 L 62 30" stroke={ACCENT} strokeWidth="0.8" strokeDasharray="2 4" opacity="0.35" />
+          </svg>
+          <div style={iconWrap("30%", "62%")}><BookMarked size={34} color={MUTED} strokeWidth={1.5} /></div>
+          <div style={iconWrap("70%", "62%")}><BookMarked size={28} color={ACCENT} strokeWidth={1.5} /></div>
+          <div style={{ ...iconWrap("72%", "28%"), width: 10, height: 10, borderRadius: "50%", background: ACCENT }} />
         </div>
       );
     default:

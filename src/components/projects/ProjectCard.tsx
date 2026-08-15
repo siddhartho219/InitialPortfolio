@@ -9,13 +9,18 @@ type ProjectCardProps = {
 };
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const isUpcoming = project.stage === "upcoming";
+
   return (
-    <article className="pc">
+    <article className={`pc${isUpcoming ? " pc--upcoming" : ""}`}>
       <ProjectMedia slug={project.slug} alt={project.title} />
 
       <div className="pc__body">
         <span className="pc__tag">{project.category}</span>
         {project.status ? <span className="pc__tag">{project.status}</span> : null}
+        {isUpcoming ? (
+          <span className="pc__tag pc__tag--upcoming">In Progress</span>
+        ) : null}
 
         {project.impact ? <p className="pc__eyebrow">{project.impact}</p> : null}
 
@@ -33,38 +38,40 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           ))}
         </div>
 
-        <div className="pc__links">
-          {project.github ? (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              className="pc__link-btn"
-            >
-              GitHub ↗
-            </a>
-          ) : null}
-          {project.video ? (
-            <a
-              href={project.video}
-              target="_blank"
-              rel="noreferrer"
-              className="pc__link-btn"
-            >
-              Watch Demo ↗
-            </a>
-          ) : null}
-          {project.demo ? (
-            <a
-              href={project.demo}
-              target="_blank"
-              rel="noreferrer"
-              className="pc__link-btn"
-            >
-              Demo ↗
-            </a>
-          ) : null}
-        </div>
+        {!isUpcoming ? (
+          <div className="pc__links">
+            {project.github ? (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                className="pc__link-btn"
+              >
+                GitHub ↗
+              </a>
+            ) : null}
+            {project.video ? (
+              <a
+                href={project.video}
+                target="_blank"
+                rel="noreferrer"
+                className="pc__link-btn"
+              >
+                Watch Demo ↗
+              </a>
+            ) : null}
+            {project.demo ? (
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noreferrer"
+                className="pc__link-btn"
+              >
+                Demo ↗
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </article>
   );

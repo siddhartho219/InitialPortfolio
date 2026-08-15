@@ -101,4 +101,18 @@ export const projects: Project[] = [
     github: "https://github.com/siddhartho219/BDletter",
     category: "Tools",
   },
+  {
+    slug: "breadcrumb",
+    title: "Breadcrumb",
+    description:
+      "A Chrome extension that shows where you left off on every project — community, academic, and personal — in one glance: tracks projects with category tags, parses markdown notes (paste/upload/connected local file), surfaces automatic \"checkpoint\" summaries, and shows progress bars with staleness indicators (fresh/aging/stale) via a toolbar badge and side panel.",
+    longDescription:
+      "A Chrome extension for keeping track of where you left off across every project — community, academic, and personal. It tracks projects with category tags, parses markdown notes (paste, upload, or a connected local file), and surfaces automatic \"checkpoint\" summaries so a half-finished thread never goes cold. Progress bars and staleness indicators (fresh / aging / stale) show the state of each project at a glance through a toolbar badge and a side panel. v1 (Phases 0-7) is complete per its own README status. Built with Vite, @crxjs/vite-plugin, and TypeScript, with chrome.storage.local for persistence and hand-rolled markdown checkpoint-heuristic parsing. Includes a full options page (editable staleness thresholds, default category, export/import as validated JSON, and a reset action), first-run onboarding, and 107 tests across 5 suites covering storage, parsing heuristics, time bucketing, the background file-poll worker, and staleness boundary logic.",
+    tech: ["TypeScript", "Vite", "Chrome Extensions", "chrome.storage"],
+    image: "/images/projects/breadcrumb.svg",
+    featured: false,
+    github: "https://github.com/siddhartho219/Breadcrumb",
+    status: "v1 · Unpublished",
+    category: "Tools",
+  },
 ];

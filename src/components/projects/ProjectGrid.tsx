@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { projects } from "@/data/projects";
@@ -11,7 +12,13 @@ import { drop } from "@/lib/motion";
 
 export default function ProjectGrid() {
   const featuredProject = projects.find((p) => p.featured) ?? projects[0];
-  const rest = projects.filter((p) => p.slug !== featuredProject.slug);
+  // Landing grid is deliberately curated: featured + the next 6 shipped
+  // projects, in data order. The full list (including any "upcoming"
+  // entries) lives on the /projects page — adding entries to the data
+  // file must not silently change the landing grid's content or count.
+  const rest = projects
+    .filter((p) => p.slug !== featuredProject.slug)
+    .slice(0, 6);
 
   return (
     <>
@@ -45,180 +52,33 @@ export default function ProjectGrid() {
           max-width: 1120px;
           margin: 0 auto;
         }
-        .pc {
+        .projects__more {
           display: flex;
-          flex-direction: column;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          overflow: hidden;
-          cursor: none;
-          transition:
-            transform 0.25s ease,
-            border-color 0.25s ease,
-            background 0.25s ease,
-            box-shadow 0.25s ease;
+          justify-content: center;
+          margin-top: var(--space-6);
         }
-        .pc:hover {
-          transform: translateY(-4px) scale(1.015);
-          border-color: var(--border-h);
-          background: var(--surface-h);
-          box-shadow:
-            0 18px 44px -18px color-mix(in srgb, var(--violet) 30%, transparent),
-            0 4px 18px -8px color-mix(in srgb, var(--accent) 16%, transparent);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .pc:hover {
-            transform: none;
-          }
-        }
-        .pc--featured {
-          grid-column: 1 / -1;
-          display: grid;
-          grid-template-columns: 1.1fr 1fr;
-          background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--accent) 6%, var(--surface)),
-            var(--surface)
-          );
-          border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
-          box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
-            0 20px 60px -30px color-mix(in srgb, var(--accent) 35%, transparent);
-        }
-        @media (max-width: 767px) {
-          .pc--featured {
-            grid-template-columns: 1fr;
-          }
-        }
-        .pc__media {
-          position: relative;
-          height: 160px;
-          overflow: hidden;
-          flex-shrink: 0;
-        }
-        .pc__media--featured {
-          min-height: 210px;
-          height: auto;
-        }
-        .pc--featured .pc__media--featured {
-          min-height: 210px;
-        }
-        @media (max-width: 767px) {
-          .pc--featured .pc__media--featured {
-            min-height: 210px;
-            height: 210px;
-          }
-        }
-        .pc__img {
-          object-fit: cover;
-          filter: brightness(0.65) saturate(0.65);
-          transition: filter 0.3s ease;
-        }
-        .pc:hover .pc__img {
-          filter: brightness(0.85) saturate(1);
-        }
-        .pc__placeholder {
-          width: 100%;
-          height: 100%;
-          min-height: inherit;
-          background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--violet) 35%, var(--bg)),
-            color-mix(in srgb, var(--accent) 18%, var(--bg))
-          );
-        }
-        .pc__body {
-          padding: var(--space-4);
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          flex: 1;
-        }
-        .pc__tag {
+        .projects__more-btn {
           display: inline-flex;
-          width: fit-content;
-          font-family: var(--fm);
-          font-size: var(--fs-caption);
-          color: var(--text-s);
-          border: 1px solid var(--border);
-          border-radius: 4px;
-          padding: 2px 8px;
-          letter-spacing: var(--ls-label);
-          text-transform: uppercase;
-        }
-        .pc__tag--featured {
-          color: var(--accent);
-          border-color: color-mix(in srgb, var(--accent) 25%, transparent);
-        }
-        .pc__title {
+          align-items: center;
+          justify-content: center;
+          padding: 12px 22px;
+          border-radius: 10px;
           font-family: var(--fb);
-          font-size: var(--fs-title);
-          font-weight: 600;
-          margin: 0;
-          line-height: var(--lh-title);
-        }
-        .pc__title--featured {
-          font-size: var(--fs-title-lg);
-        }
-        .pc__title a {
+          font-size: var(--fs-body);
+          font-weight: 500;
+          text-decoration: none;
           color: var(--text);
-          text-decoration: none;
-          transition: color 0.2s ease;
-        }
-        .pc__title a:hover {
-          color: var(--accent);
-        }
-        .pc__desc {
-          font-family: var(--fb);
-          font-size: var(--fs-sm);
-          color: var(--text-m);
-          line-height: var(--lh-sm);
-          margin: 0;
-          flex: 1;
-        }
-        .pc__eyebrow {
-          font-family: var(--fm);
-          font-size: var(--fs-caption);
-          letter-spacing: var(--ls-label);
-          text-transform: uppercase;
-          color: var(--accent);
-          margin: 0;
-        }
-        .pc__stack {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-          margin-top: 0.15rem;
-        }
-        .pc__pill {
-          font-family: var(--fm);
-          font-size: var(--fs-caption);
-          color: var(--text-s);
-          border: 1px solid var(--border);
-          border-radius: 4px;
-          padding: 2px 7px;
-        }
-        .pc__links {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 0.35rem;
-        }
-        .pc__link-btn {
-          font-family: var(--fm);
-          font-size: var(--fs-caption);
-          color: var(--text-s);
-          text-decoration: none;
-          border: 1px solid var(--border);
-          border-radius: 4px;
-          padding: 4px 10px;
+          border: 1px solid var(--border-h);
+          background: transparent;
           transition:
+            transform 0.2s ease,
+            background 0.2s ease,
             border-color 0.2s ease,
-            color 0.2s ease;
+            box-shadow 0.2s ease;
         }
-        .pc__link-btn:hover {
-          border-color: var(--border-h);
-          color: var(--text);
+        .projects__more-btn:hover {
+          border-color: var(--accent);
+          background: color-mix(in srgb, var(--accent) 6%, transparent);
         }
       `}</style>
 
@@ -238,6 +98,12 @@ export default function ProjectGrid() {
             </motion.div>
           ))}
         </AnimateSection>
+
+        <div className="projects__more">
+          <Link href="/projects" className="projects__more-btn" data-magnetic>
+            View All Projects
+          </Link>
+        </div>
       </section>
     </>
   );

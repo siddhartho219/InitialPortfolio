@@ -12,6 +12,12 @@ export interface Project {
   video?: string;
   status?: string;
   category: string;
+  /**
+   * Shipment stage. Omitted = shipped (existing behavior). Set to "upcoming"
+   * for projects that exist but aren't released yet — their cards render
+   * visually distinct (dimmed, "In Progress" pill, no external links).
+   */
+  stage?: "shipped" | "upcoming";
 }
 
 export interface Skill {
