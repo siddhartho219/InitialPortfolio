@@ -42,7 +42,7 @@ export default function ProjectGrid() {
         }
         .projects__featured {
           max-width: 1120px;
-          margin: 0 auto var(--space-6);
+          margin: 0 auto var(--space-8);
         }
         .projects__carousel-zone {
           max-width: 1120px;
@@ -91,15 +91,48 @@ export default function ProjectGrid() {
           inset: 0;
           display: flex;
           justify-content: center;
+          /* Critical: without this, the card wrapper (a flex item) stretches
+             to the slot height (= the stage height), which is measured FROM
+             the wrapper — a feedback loop that grows the stage unboundedly. */
+          align-items: flex-start;
           pointer-events: none;
         }
         .carousel__card {
           pointer-events: auto;
           will-change: transform, opacity, filter;
         }
+        .carousel__card--center {
+          user-select: none;
+        }
+        .carousel__card--center .pc {
+          cursor: grab;
+        }
+        .carousel__card--center.carousel__card--dragging .pc {
+          cursor: grabbing;
+        }
         .carousel__card--far {
           pointer-events: none;
           visibility: hidden;
+        }
+        /* In the carousel the card sits directly over the starfield, so it
+           needs a stronger backdrop than the site-wide --surface (5.5% white)
+           to keep body text legible. Dark translucent + backdrop blur keeps
+           the glass aesthetic while fixing contrast. */
+        .carousel__card .pc {
+          background: color-mix(in srgb, var(--bg) 74%, transparent);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+        .carousel__card .pc:hover {
+          background: color-mix(in srgb, var(--bg) 82%, transparent);
+        }
+        /* Consistent card height: descriptions clamp to 2 lines so every
+           card (center + neighbors) shares the same natural height. */
+        .carousel__card .pc__desc {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .carousel__controls {
           display: flex;
@@ -109,15 +142,21 @@ export default function ProjectGrid() {
           margin-top: var(--space-5);
         }
         .carousel__btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 5;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 42px;
-          height: 42px;
-          border-radius: 10px;
+          width: 52px;
+          height: 52px;
+          border-radius: 12px;
           color: var(--text);
           border: 1px solid var(--border-h);
-          background: transparent;
+          background: color-mix(in srgb, var(--bg) 55%, transparent);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
           transition:
             transform 0.2s ease,
             background 0.2s ease,
@@ -125,8 +164,15 @@ export default function ProjectGrid() {
             box-shadow 0.2s ease;
         }
         .carousel__btn:hover {
+          transform: translateY(-50%) scale(1.06);
           border-color: var(--accent);
-          background: color-mix(in srgb, var(--accent) 6%, transparent);
+          background: color-mix(in srgb, var(--bg) 70%, transparent);
+        }
+        .carousel__btn--prev {
+          left: 0;
+        }
+        .carousel__btn--next {
+          right: 0;
         }
         .carousel__dots {
           display: flex;
@@ -164,11 +210,24 @@ export default function ProjectGrid() {
           .carousel__stage {
             min-height: 440px;
           }
+          .carousel__btn {
+            width: 46px;
+            height: 46px;
+          }
+          .carousel__btn--prev {
+            left: 4px;
+          }
+          .carousel__btn--next {
+            right: 4px;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
           .carousel__btn:hover,
           .carousel__dot:hover {
             transform: none;
+          }
+          .carousel__btn:hover {
+            transform: translateY(-50%);
           }
         }
       `}</style>
